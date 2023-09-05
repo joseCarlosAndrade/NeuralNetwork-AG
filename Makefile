@@ -15,8 +15,8 @@ all: bin/network.o
 run:
 	./bin/network
 
-bin/network.o: src/main.c
-	gcc -c src/main.c -o bin/network.o $(C_ARGS)
+bin/network.o: game/main.c
+	gcc -c game/main.c -o bin/network.o $(C_ARGS)
 
 # run a single instance of jogo da veia
 single: bin/main.o
