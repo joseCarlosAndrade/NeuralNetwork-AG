@@ -62,13 +62,14 @@ int main(int argc, char ** argv) {
     while (game->game_status == ON) {
         int pos;
         if (game->player==P_1) play_round(game, network_1);
-        else {
-            scanf(" %d", &pos);
-            while( !put_piece(game, pos) ) {
-                printf("Position not valid. Try again. \n\n");
-                scanf(" %d", &pos); 
-        }    
-        }
+        if (game->player==P_2) play_round(game, network_2);
+        // else {
+        //     scanf(" %d", &pos);
+        //     while( !put_piece(game, pos) ) {
+        //         printf("Position not valid. Try again. \n\n");
+        //         scanf(" %d", &pos); 
+        // }    
+        // }
 
         check_game_state(game);
         print_board(game);
