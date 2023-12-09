@@ -44,7 +44,6 @@ struct geneticAlgorithm_st {
 #define initChromosomeRand(t_evol) typeEvolvable_getInitFunction(t_evol)(NULL, 0)
 #define initChromosomeSynthesis(population, popSize, t_evol) typeEvolvable_getInitFunction(t_evol)(population, popSize)
 #define evaluatePopulation(population, popSize, out_fitness, t_evol) typeEvolvable_getEvaluateFunction(t_evol)(population, popSize, out_fitness)
-#define fitness(chromosome, t_evol) typeEvolvable_getFitnessFunction(t_evol)(chromosome)
 #define crossover(chromosome1, chromosome2, t_evol) typeEvolvable_getCrossoverFunction(t_evol)(chromosome1, chromosome2)
 #define mutate(chromosome, rate, t_evol) typeEvolvable_getMutateFunction(t_evol)(chromosome, rate)
 
