@@ -41,3 +41,5 @@ bin/velha.o: src/velha.c include/velha.h
 
 clean:
 	rm bin/*
+
+

@@ -20,6 +20,7 @@ ou seja, quando forem O (-1) multiplicar a lista por *-1
 */
 
 #define EULER 2.71828
+#define VERBOSE 1
 
 struct _2layer_neural_network
 {
@@ -72,6 +73,7 @@ int main(int argc, char ** argv) {
         // }
 
         check_game_state(game);
+        if (VERBOSE)
         print_board(game);
     }
 
