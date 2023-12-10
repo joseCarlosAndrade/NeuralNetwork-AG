@@ -25,7 +25,7 @@ func (g * Game)Run() {
 			} else {
 				GameText = "Game ended. TIE!"
 			}
-			break
+			// break
 		}
 		// update
 		// draw
