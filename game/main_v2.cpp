@@ -2,8 +2,9 @@
 //#include<stdlib.h>
 //#include<string.h>
 //#include<math.h>
-#include"../include/velha.h"
-#include"../include/matrix_operations.h"
+// #include"../include/velha.h"
+#include "velha.h"
+// #include"../include/matrix_operations.h"
 
 // C++ libraries
 
@@ -16,7 +17,8 @@
 #include <memory>
 
 // Required libraries for neural network manipulation
-#include "../include/neural_network.h"
+// #include "../include/neural_network.h"
+#include "neural_network.h"
 // Acho que não precisaria incluir
 #include <Eigen/Core>
 #include "MiniDNN.h"
@@ -27,7 +29,6 @@ typedef Eigen::VectorXd Vector;
 
 using namespace MiniDNN;
 using namespace std;
-
 
 
 /* Versão 2 - Utilizar biblioteca específica de redes neurais para c++ (manter restante da ideia original):
@@ -48,15 +49,13 @@ ou seja, quando forem O (-1) multiplicar a lista por *-1
 
 void load_params(std::vector<std::unique_ptr<Network>>& vec_net);
 void play_round(Game*game, std::unique_ptr<Network>& network);
-void get_max_index(Matrix2Df*output, int indexes[9]);
+// void get_max_index(Matrix2Df*output, int indexes[9]);
 
 int main(int argc, char ** argv) {
 
     // Inicializar 2 redes neurais
-    vector<int> num_neurons = {9,18,9}; // *Necessário rever número de neurons de cada camada
+    vector<int> num_neurons = {9,30,18,9}; // *Necessário rever número de neurons de cada camada
     int num_layers = num_neurons.size() - 1, num_networks = 2;;
-
-    Network net;
 
     auto vec_net = generate_vector_RNN(num_networks, num_layers, num_neurons);
 
@@ -67,7 +66,7 @@ int main(int argc, char ** argv) {
     print_board(game);
 
     while (game->game_status == ON) {
-        int pos;
+        // int pos;
         if (game->player==P_1) play_round(game, vec_net[0]);
         if (game->player==P_2) play_round(game, vec_net[1]);
         // else {
@@ -91,7 +90,6 @@ int main(int argc, char ** argv) {
     serialize_parameters_txt("rnn_parameters_1.txt", params1);
     serialize_parameters_txt("rnn_parameters_2.txt", params2);
 }
-
 
 
 void load_params(std::vector<std::unique_ptr<Network>>& vec_net) {
@@ -128,57 +126,62 @@ void play_round(Game*game, std::unique_ptr<Network>& network) {
     // float input [9] = get_board(game, 'f');
 
     //implement on game library a way of returning floats
-    float input[9];
+    Matrix input(9,1);
     for ( int i = 0; i < 9; i++) {
-        input[i] = (float)game->board[i];
+        input(i,0) = (float)game->board[i];
     }
 
     if (game->player == P_2) { // neural network will always play as X (player 1)
         for (int i = 0; i < 9; i ++) {
-            input[i] *= -1;
+            input(i,0) *= -1;
         }
     }
 
     // *** Calcular output da rede para o input
-
-
+    auto output =  network->predict(input);
 
     // gets the best options (sorts)
-    int index_list[9] = {0, 0, 0, 0 ,0, 0 ,0 ,0 ,0};
     int choose = 0;
     // print_matrix(output);
 
-    get_max_index(get_transposed(output), index_list);
+    // get_max_index(get_transposed(output), index_list);
 
-    printf("\nplaying: %d \n", index_list[0]);
+    // Get the indices of the sorted elements
+    Eigen::VectorXi indices = Eigen::VectorXi::LinSpaced(output.rows(), 0, output.rows() - 1);
+    std::sort(indices.data(), indices.data() + indices.size(), [&output](int i, int j) {
+        return output(i, 0) < output(j, 0);});
 
-    while (!put_piece(game, index_list[choose++]))
+    // Print the results
+    std::cout << "Matrix:\n" << output << "\n";
+    std::cout << "Indices of Sorted Elements:\n" << indices << "\n";
+
+    while (!put_piece(game, indices[choose++]))
     {
         printf("\nInvalid insertion.. \n");
     }
-    printf("Piece inserted: %d\n,", index_list[choose-1]);
+    printf("Piece inserted: %d\n,", indices[choose-1]);
     
 }
 
-void get_max_index(Matrix2Df*output, int indexes[9]) {
-    // int indexes[9];
-    print_matrix(output);
+// void get_max_index(Matrix2Df*output, int indexes[9]) {
+//     // int indexes[9];
+//     print_matrix(output);
 
-    for (int i = 0; i < 9; i ++) {
-        float max = 0;
+//     for (int i = 0; i < 9; i ++) {
+//         float max = 0;
 
-        for (int j = 0; j < 9; j++) {
-            if (output->_base_ptr[0][j] > max) {
-                // printf("\ni %d ; j %d %f  %f\n", i, j, output->_base_ptr[0][j] , max);
-                max = output->_base_ptr[0][j];
-                indexes[i] = j;
+//         for (int j = 0; j < 9; j++) {
+//             if (output->_base_ptr[0][j] > max) {
+//                 // printf("\ni %d ; j %d %f  %f\n", i, j, output->_base_ptr[0][j] , max);
+//                 max = output->_base_ptr[0][j];
+//                 indexes[i] = j;
                 
-            }
-        }
-        output->_base_ptr[0][indexes[i]] = 0;
+//             }
+//         }
+//         output->_base_ptr[0][indexes[i]] = 0;
 
-        printf(" %d ", indexes[i]);
-    }
+//         printf(" %d ", indexes[i]);
+//     }
 
-    // return indexes;
-}
+//     // return indexes;
+// }

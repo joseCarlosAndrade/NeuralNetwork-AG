@@ -102,48 +102,48 @@ void print_parameters(vector<vector<Scalar>> parameters){
 
 
 
-int main()
-{
-    // Set random seed and generate some data
-    std::srand(123);
-    // Predictors -- each column is an observation
-    Matrix x = Matrix::Random(400, 100);
-    // Response variables -- each column is an observation
-    Matrix y = Matrix::Random(2, 100);
-    // Construct a network object
-    Network net;
-    // (Optional) set callback function object
-    // VerboseCallback callback;
-    // net.set_callback(callback);
-    // Obtain prediction -- each column is an observation
-    // Matrix pred = net.predict(x);
-    vector<int> num_neurons = {1,2,1};
-    int num_layers = num_neurons.size() - 1;
-    int num_networks = 3;
-    // generate_RNN(net, 2, num_neurons);
-    auto vec_net = generate_vector_RNN(3, 2, num_neurons);
+// int main()
+// {
+//     // Set random seed and generate some data
+//     std::srand(123);
+//     // Predictors -- each column is an observation
+//     Matrix x = Matrix::Random(400, 100);
+//     // Response variables -- each column is an observation
+//     Matrix y = Matrix::Random(2, 100);
+//     // Construct a network object
+//     Network net;
+//     // (Optional) set callback function object
+//     // VerboseCallback callback;
+//     // net.set_callback(callback);
+//     // Obtain prediction -- each column is an observation
+//     // Matrix pred = net.predict(x);
+//     vector<int> num_neurons = {1,2,1};
+//     int num_layers = num_neurons.size() - 1;
+//     int num_networks = 3;
+//     // generate_RNN(net, 2, num_neurons);
+//     auto vec_net = generate_vector_RNN(3, 2, num_neurons);
     
-    auto parameters1 = vec_net[0]->get_parameters();
-    auto parameters2 = vec_net[1]->get_parameters();
-    auto parameters3 = vec_net[2]->get_parameters();
-    cout<<"RNN1:"<<endl;
-    print_parameters(parameters1);
-    cout<<"RNN2:"<<endl;
-    print_parameters(parameters2);
-    cout<<"RNN3:"<<endl;
-        print_parameters(parameters3);
+//     auto parameters1 = vec_net[0]->get_parameters();
+//     auto parameters2 = vec_net[1]->get_parameters();
+//     auto parameters3 = vec_net[2]->get_parameters();
+//     cout<<"RNN1:"<<endl;
+//     print_parameters(parameters1);
+//     cout<<"RNN2:"<<endl;
+//     print_parameters(parameters2);
+//     cout<<"RNN3:"<<endl;
+//         print_parameters(parameters3);
 
-    // Example: Save parameters to a text file
-    // serialize_parameters_txt("rnn_parameters.txt", parameters);
+//     // Example: Save parameters to a text file
+//     // serialize_parameters_txt("rnn_parameters.txt", parameters);
 
-    // // Example: Load parameters from a text file
-    // std::vector<std::vector<Scalar>> loaded_parameters;
-    // deserialize_parameters_txt("rnn_parameters.txt", loaded_parameters);
-    // net.set_parameters(loaded_parameters);
+//     // // Example: Load parameters from a text file
+//     // std::vector<std::vector<Scalar>> loaded_parameters;
+//     // deserialize_parameters_txt("rnn_parameters.txt", loaded_parameters);
+//     // net.set_parameters(loaded_parameters);
 
-    // parameters = net.get_parameters();
-    // print_parameters(parameters);
+//     // parameters = net.get_parameters();
+//     // print_parameters(parameters);
 
-    return 0;
-}
+//     return 0;
+// }
 
