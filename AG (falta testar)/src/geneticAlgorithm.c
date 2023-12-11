@@ -1,5 +1,9 @@
 #include "../include/geneticAlgorithm.h"
 
+typedef void (*SelectionFunction)(GA *, int, int *, int *); // Modelo de ponteiro de funcao de selecao
+typedef void ** (*GenocidedSubstitutionFunction)(GA *); // Modelo de ponteiro de funcao para gerar nova populacao apos genocidio
+typedef void * (*PredatedSubstitutionFunction)(GA *); // Modelo de ponteiro de funcao para gerar um substituto para o cromossomo predado
+
 struct geneticAlgorithm_st {
     int populationSize;
     float mutationBase;
@@ -49,16 +53,13 @@ struct geneticAlgorithm_st {
 
 
 
-typedef void (*SelectionFunction)(GA *, int, int *, int *); // Modelo de ponteiro de funcao de selecao
 static void selectElitism(GA *geneticAlgorithm, int currentIndex, int *out_parent1Index, int *out_parent2Index);
 static void select2WayTournament(GA *geneticAlgorithm, int currentIndex, int *out_parent1Index, int *out_parent2Index);
 static void selectRouletteWheel(GA *geneticAlgorithm, int currentIndex, int *out_parent1Index, int *out_parent2Index);
 
-typedef void ** (*GenocidedSubstitutionFunction)(GA *); // Modelo de ponteiro de funcao para gerar nova populacao apos genocidio
 static void ** genocidedSubstituteKeepBest(GA *geneticAlgorithm);
 static void ** genocidedSubstituteAll(GA *geneticAlgorithm);
 
-typedef void * (*PredatedSubstitutionFunction)(GA *); // Modelo de ponteiro de funcao para gerar um substituto para o cromossomo predado
 static void * predatedSubstituteRandom(GA *geneticAlgorithm);
 static void * predatedSubstituteSynthesis(GA *geneticAlgorithm);
 
@@ -77,12 +78,12 @@ static void updateInheritances(GA *geneticAlgorithm);
 static float getThisGenBestFitness(GA *geneticAlgorithm, boolean considerBestOfTheBest);
 static float getThisGenWorstFitness(GA *geneticAlgorithm);
 
-static boolean isInitialized(GA *geneticAlgorithm);
-static boolean isStuck(GA *geneticAlgorithm);
-static boolean shouldProtectIndex(GA *geneticAlgorithm, int index);
-static boolean shouldAdaptMutation(GA *geneticAlgorithm);
-static boolean shouldGenocide(GA *geneticAlgorithm);
-static boolean shouldPredate(GA *geneticAlgorithm);
+static boolean isInitialized(const GA *geneticAlgorithm);
+static boolean isStuck(const GA *geneticAlgorithm);
+static boolean shouldProtectIndex(const GA *geneticAlgorithm, int index);
+static boolean shouldAdaptMutation(const GA *geneticAlgorithm);
+static boolean shouldGenocide(const GA *geneticAlgorithm);
+static boolean shouldPredate(const GA *geneticAlgorithm);
 
 static void resetState(GA *geneticAlgorithm);
 static void resetStuck(GA *geneticAlgorithm);
@@ -387,7 +388,7 @@ static void selectRouletteWheel(GA *geneticAlgorithm, int currentIndex, int *out
                 candidate++;
                 roulette -= (geneticAlgorithm->fitnesses[candidate] - minFitness + offsetFitness) / normalizedFitnessSum;
             }
-            candidate = max(candidate, 0);
+            candidate = fmax(candidate, 0);
         }
 
         *(out_parents[i]) = candidate;
@@ -608,6 +609,8 @@ static void updateBestOfTheBest(GA *geneticAlgorithm) {
     else {
         geneticAlgorithm->bestOfTheBestFitness = bobFitness;
     }
+
+    eraseFitnessVec(&fitnessesWithBob);
 }
 
 static void updateInheritances(GA *geneticAlgorithm) {
@@ -629,7 +632,7 @@ static float getThisGenBestFitness(GA *geneticAlgorithm, boolean considerBestOfT
     float bestFitness = geneticAlgorithm->fitnesses[genBestIndex];
     if(considerBestOfTheBest && geneticAlgorithm->bestOfTheBest != NULL) {
         float bobFitness = geneticAlgorithm->bestOfTheBestFitness;
-        bestFitness = max(bestFitness, bobFitness);
+        bestFitness = fmax(bestFitness, bobFitness);
     }
     return bestFitness;
 }
@@ -642,27 +645,27 @@ static float getThisGenWorstFitness(GA *geneticAlgorithm) {
 
 
 
-static boolean isInitialized(GA *geneticAlgorithm) {
+static boolean isInitialized(const GA *geneticAlgorithm) {
     return geneticAlgorithm->generation >= 0;
 }
 
-static boolean isStuck(GA *geneticAlgorithm) {
+static boolean isStuck(const GA *geneticAlgorithm) {
     return fabs(geneticAlgorithm->bestFitnessHistory[geneticAlgorithm->generation] - geneticAlgorithm->bestFitnessHistory[geneticAlgorithm->generation - 1]) < STUCK_THRESHOLD;
 }
 
-static boolean shouldProtectIndex(GA *geneticAlgorithm, int index) {
+static boolean shouldProtectIndex(const GA *geneticAlgorithm, int index) {
     return index == geneticAlgorithm->bestChromosomeIndex || geneticAlgorithm->fitnesses[index] > geneticAlgorithm->fitnesses[geneticAlgorithm->bestChromosomeIndex];
 }
 
-static boolean shouldAdaptMutation(GA *geneticAlgorithm) {
+static boolean shouldAdaptMutation(const GA *geneticAlgorithm) {
     return geneticAlgorithm->mutationAdaptationStuckPeriod > 0 && geneticAlgorithm->generationsStuck % geneticAlgorithm->mutationAdaptationStuckPeriod == 0;
 }
 
-static boolean shouldGenocide(GA *geneticAlgorithm) {
+static boolean shouldGenocide(const GA *geneticAlgorithm) {
     return geneticAlgorithm->genocideStuckPeriod > 0 && geneticAlgorithm->generationsStuck >= geneticAlgorithm->genocideStuckPeriod;
 }
 
-static boolean shouldPredate(GA *geneticAlgorithm) {
+static boolean shouldPredate(const GA *geneticAlgorithm) {
     return geneticAlgorithm->predationPeriod > 0 && geneticAlgorithm->generation % geneticAlgorithm->predationPeriod == 0;
 }
 
@@ -755,7 +758,7 @@ static float calcInheritedFitnessSum(float **inheritances, int chromosomeIndex) 
 
 static float calcMutation(float mutationRate) {
     float random = (float)rand() / (float)RAND_MAX;
-    return (random - 0.5) * 2 * min(mutationRate, MUTATION_RATE_LIMIT);
+    return (random - 0.5) * 2 * fmin(mutationRate, MUTATION_RATE_LIMIT);
 }
 
 
