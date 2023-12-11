@@ -10,7 +10,7 @@
 
 typedef struct typeEvolvable_st T_EVOLVABLE;
 
-typedef void * (*InitFunction)(const void **, const int); // Modelo de ponteiro de funcao que inicializa um objeto desse TAD, usando uma lista (e seu tamanho) de outros objetos como argumento (para sintese, por exemplo), ou de forma aleatoria se arg = null
+typedef void * (*InitFunction)(void **, const int); // Modelo de ponteiro de funcao que inicializa um objeto desse TAD, usando uma lista (e seu tamanho) de outros objetos como argumento (para sintese, por exemplo), ou de forma aleatoria se arg = null
 typedef void (*EvaluateFunction)(void **, const int, float *); // Modelo de ponteiro de funcao que avalia toda a lista de objetos desse TAD e salva os fitnesses no vetor fornecido
 typedef void * (*CrossoverFunction)(const void *, const void *); // Modelo de ponteiro de funcao que gera um novo objeto desse TAD a partir de dois outros objetos
 typedef void (*MutateFunction)(void *, const float); // Modelo de ponteiro de funcao que aplica mutacao em um objeto desse TAD
