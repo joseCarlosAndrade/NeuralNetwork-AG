@@ -1,4 +1,4 @@
-#include"../include/velha.h"
+#include "velha.h"
 #include<stdio.h>
 
 
