@@ -1,6 +1,10 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "util.h"
 
 // -> Type eh um TAD que carrega informacoes importantes sobre um outro TAD
@@ -21,5 +25,9 @@ CompareFunction type_getCompareFunction(const T *type);
 PrintFunction type_getPrintFunction(const T *type);
 EraseFunction type_getEraseFunction(const T *type);
 void type_erase(T **type_addr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //TYPE_H

@@ -7,6 +7,13 @@
 #include <Eigen/Core> 
 #include "MiniDNN.h" 
 
+
+#include "util.h"
+#include "type.h"
+#include "typeEvolvable.h"
+
+
+
 typedef Eigen::MatrixXd Matrix;
 typedef Eigen::VectorXd Vector;
 using namespace MiniDNN;
@@ -26,6 +33,20 @@ std::vector<std::unique_ptr<Network>> generate_vector_RNN(int num_RNN, int num_l
 
 // Function to print neural_network parameters 
 void print_parameters(std::vector<std::vector<Scalar>> parameters);
+
+#include "util.h"
+#include "type.h"
+#include "typeEvolvable.h"
+
+typedef struct player_st PLAYER;
+
+T * player_getType();
+T_EVOLVABLE * player_getTypeEvolvable();
+
+PLAYER * player_create(const float x);
+float player_getElement(const PLAYER *player); // getX
+// void player_erase(PLAYER **player_addr);
+
 
 
 #endif 

@@ -1,6 +1,10 @@
 #ifndef TYPEEVOLVABLE_H
 #define TYPEEVOLVABLE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "util.h"
 
 // -> TypeEvolvable eh um TAD que carrega informacoes importantes sobre um outro TAD
@@ -21,5 +25,9 @@ EvaluateFunction typeEvolvable_getEvaluateFunction(const T_EVOLVABLE *typeEvolva
 CrossoverFunction typeEvolvable_getCrossoverFunction(const T_EVOLVABLE *typeEvolvable);
 MutateFunction typeEvolvable_getMutateFunction(const T_EVOLVABLE *typeEvolvable);
 void typeEvolvable_erase(T_EVOLVABLE **typeEvolvable_addr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //TYPEEVOLVABLE_H

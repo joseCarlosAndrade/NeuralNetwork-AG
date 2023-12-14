@@ -1,6 +1,10 @@
 #ifndef GENETICALGORITHM_H
 #define GENETICALGORITHM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "util.h"
 #include "type.h"
 #include "typeEvolvable.h"
@@ -55,5 +59,9 @@ float * geneticAlgorithm_getBestFitnessHistory(const GA *geneticAlgorithm);
 float * geneticAlgorithm_getMeanFitnessHistory(const GA *geneticAlgorithm);
 
 void geneticAlgorithm_erase(GA **geneticAlgorithm_addr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //GENETICALGORITHM_H

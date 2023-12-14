@@ -1,0 +1,6 @@
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/neural_n.dir
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/velha.dir
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/AG_lib.dir
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/my_executable.dir
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/edusc/OneDrive/Documentos/majors_usp/sistemas_evolutivos_jogo/NeuralNetwork-AG/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,6 +1,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,5 +50,9 @@ void bytes_free(byte **bytes_addr);
 
 void checkNullPointerError(const void *pointer);
 //----------------------------------------------------------------
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //UTIL_H
