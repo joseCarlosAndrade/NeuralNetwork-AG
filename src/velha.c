@@ -1,4 +1,4 @@
-#include "velha.h"
+#include"../include/velha.h"
 #include<stdio.h>
 
 
@@ -68,8 +68,8 @@ void check_game_state(Game* game) {
 
 
 void print_board(Game * game) {
-    char * p = "O X";
-    printf(
+    //char * p = "O X";
+    /*printf(
     "\n %c | %c | %c   |   0 | 1 | 2 \n___________  |\n %c | %c | %c   |   3 | 4 | 5 \n___________  |\n %c | %c | %c   |   6 | 7 | 8 \n",
     p[game->board[0]+1],
     p[game->board[1]+1],
@@ -80,7 +80,7 @@ void print_board(Game * game) {
     p[game->board[6]+1],
     p[game->board[7]+1],
     p[game->board[8]+1]
-    );
+    );*/
 }
 
 int * get_board(Game *game) {

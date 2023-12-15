@@ -4,10 +4,6 @@
 #ifndef _VELHA_H
 #define _VELHA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define P_1 1 // X
 #define P_2 -1 // O
 
@@ -20,7 +16,7 @@ typedef enum _game_status GameStatus;
 struct _game {
     int board[9];
     int player;
-    GameStatus game_status;
+    int game_status; // -1 - DEFEAT, 0 - ON, 1 - VICTORY, 2 - TIE
 };
 
 
@@ -42,6 +38,12 @@ If needed, its `game_status` attribute is changed.
 @param[in] game Game board */
 void check_game_state(Game* game);
 
+int check_row(Game* game);
+int check_column(Game* game);
+int check_diagonal(Game* game);
+int check_tie(Game* game);
+
+
 /* Prints the board in plain ASCII (for human playing).
 @param[in] game Game board */
 void print_board(Game *game);
@@ -51,9 +53,5 @@ void print_board(Game *game);
 @param[in] game Game board 
 @return int[9] An array that represents the current state of the board */
 int * get_board(Game *game);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
