@@ -46,6 +46,8 @@ void generate_RNN(Network & net,int num_layers, vector<int> & num_neurons);
 vector<std::unique_ptr<Network>> generate_vector_RNN(int num_RNN, int num_layers, vector<int> &num_neurons);
 void print_parameters(vector<vector<Scalar>> parameters);
 void multiplyMatrixScalar(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor);
+std::vector<std::vector<Scalar>> sumVectorsElementWise(const std::vector<std::vector<Scalar>>& vec1, const std::vector<std::vector<Scalar>>& vec2);
+void scaleAndAdd(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor);
 
 
 PLAYER * player_create(const Network & net) {
@@ -89,22 +91,25 @@ void player_erase(PLAYER **player_addr) {
 
 
 static void * playerInitFunction(void **dataVec, const int vecSize) { 
-    float x = -1;
-    if(dataVec == NULL) {
-        float random = (float)rand() / (float)RAND_MAX;
-        x = random * (X_MAX - X_MIN) + X_MIN;
+    Network net;
+    PLAYER *playerNew;
+    generate_RNN(net, playerNew->num_layers, playerNew->num_neurons);
+    if(dataVec == NULL) { //use net as it is
     }
     else {
-        float sum = 0;
-        for(int i=0 ; i<vecSize ; i++) {
-            FUNCAOESCROTA *funcaoEscrota = (FUNCAOESCROTA *) dataVec[i];
-            sum += funcaoEscrota->x;
+        auto parameters = net.get_parameters();
+        multiplyMatrixScalar(parameters, 0); // put zero the random value
+        for(int i=0 ; i < vecSize ; i++) {
+            PLAYER *player = (PLAYER *) dataVec[i];
+            parameters = sumVectorsElementWise(player->net.get_parameters(), parameters);
         }
-        x = sum / vecSize;
+        // divide by vecSize
+        multiplyMatrixScalar(parameters, vecSize);
+        net.set_parameters(parameters);
     }
 
-    FUNCAOESCROTA *funcaoEscrotaNew = funcaoEscrota_create(x);
-    return funcaoEscrotaNew;
+    playerNew = player_create(net);
+    return playerNew;
 }
 
 
@@ -238,6 +243,28 @@ void multiplyMatrixScalar(std::vector<std::vector<Scalar>>& matrix, Scalar scale
             element = element * scaleFactor;
         }
     }
+}
+
+// Function to sum two vectors of vectors element-wise
+std::vector<std::vector<Scalar>> sumVectorsElementWise(const std::vector<std::vector<Scalar>>& vec1,
+                                                      const std::vector<std::vector<Scalar>>& vec2) {
+    // Check if the vectors have the same size
+    if (vec1.size() != vec2.size() || (vec1.size() > 0 && vec1[0].size() != vec2[0].size())) {
+        std::cerr << "Vectors must have the same size for element-wise addition." << std::endl;
+        return {};
+    }
+
+    // Initialize the result vector with the same size as the input vectors
+    std::vector<std::vector<Scalar>> result(vec1.size(), std::vector<Scalar>(vec1[0].size(), 0.0));
+
+    // Perform element-wise addition
+    for (std::size_t i = 0; i < vec1.size(); ++i) {
+        for (std::size_t j = 0; j < vec1[0].size(); ++j) {
+            result[i][j] = vec1[i][j] + vec2[i][j];
+        }
+    }
+
+    return result;
 }
 
 
