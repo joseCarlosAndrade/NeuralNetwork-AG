@@ -6,7 +6,12 @@
 using namespace std;
 using namespace MiniDNN;
 
-typedef enum { ONGOING, TIE, P1_VICTORY, P2_VICTORY } game_status;
+typedef enum {
+    ONGOING = -1,
+    TIE = 0,
+    P1_VICTORY = 1,
+    P2_VICTORY = 2
+} game_status;
 
 class TwoPlayerGame {
     protected:
