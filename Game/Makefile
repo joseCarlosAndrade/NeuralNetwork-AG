@@ -1,11 +1,11 @@
-MAIN = src/main.c
-UTIL = src/util.c src/type.c src/typeEvolvable.c src/geneticAlgorithm.c src/funcaoEscrota.c
+MAIN = src/main.cpp
+UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp
 BINARY = bin/teste
 ZIP = teste.zip
 INCLUDE_FOLDER = include
 
 all:
-	@gcc -Wall -Werror -g -I$(INCLUDE_FOLDER) $(UTIL) $(MAIN) -o $(BINARY) -lm
+	@g++ -Wall -Werror -g -I$(INCLUDE_FOLDER) $(UTIL) $(MAIN) -o $(BINARY) -lm
 
 run:
 	@./$(BINARY)
