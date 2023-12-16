@@ -14,8 +14,8 @@ typedef Eigen::VectorXd Vector;
 #include <vector>
 #include <memory>
 
-#define ERROR_PENALTY 10
-
+#define WRONG_MOVE_PENALTY 10
+#define VICTORY_PREMIUM 15
 
 struct player_st {
     Network net;
@@ -116,37 +116,38 @@ static void * playerInitFunction(void **dataVec, const int vecSize) {
 
 
 static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses){
+    for(int i = 0; i < vecSize; i++){
+        out_fitnesses[i] = 0;
+    }
     for(int i=0 ; i<vecSize ; i++) {
-        PLAYER *player = (PLAYER *) dataVec[i];
+        PLAYER *player1 = (PLAYER *) dataVec[i];
         for(int j = 0; j < vecSize; j++){
+            PLAYER *player2 = (PLAYER *) dataVec[j];
             if(i != j){
                 Game * game = initialize_game();
                 print_board(game);
                 int wrong_moves1 = 0;
                 int wrong_moves2 = 0;
                 while (game->game_status == ON) {
-                    // int pos;
-                    // if (game->player==P_1) play_round(game, vec_net[0]);
-                    // if (game->player==P_2) play_round(game, vec_net[1]);
-                    // else {
-                    //     scanf(" %d", &pos);
-                    //     while( !put_piece(game, pos) ) {
-                    //         printf("Position not valid. Try again. \n\n");
-                    //         scanf(" %d", &pos); 
-                    // }    
-                    // }
-
+                    int pos;
+                    if (game->player==P_1) wrong_moves1 += play_round(game, player1->net);
+                    if (game->player==P_2) wrong_moves2 += play_round(game, player2->net);
                     check_game_state(game);
                     print_board(game);
                 }
-
                 char * p = "O X";
                 printf("\nFinished! Game status: %d.\nCurrent player: %c\n", game->game_status, p[game->player*-1 + 1]);
-
+                // OUTFITNESS ESTA INICIALIZADO?
+                if(player1 == victory){
+                    out_fitnesses[i] += VICTORY_PREMIUM;
+                }else if (player1 == victory)
+                {
+                    out_fitnesses[j] += VICTORY_PREMIUM;
+                }
+                out_fitnesses[i] -= WRONG_MOVE_PENALTY * wrong_moves1;
+                out_fitnesses[j] -= WRONG_MOVE_PENALTY * wrong_moves2;
             }
         }
-
-        // out_fitnesses[i] = ;
     }
 }
 
@@ -178,8 +179,8 @@ static void * playerCrossoverFunction(const void *data1, const void *data2) { //
 }
 
 
-void play_round(Game*game, std::unique_ptr<Network>& network, int nb_errors) {
-
+int play_round(Game*game, Network & network) {
+    int nb_wrong_moves = 0;
     // get the inputs (board)
     Matrix input(9,1);
     for ( int i = 0; i < 9; i++) {
@@ -193,7 +194,7 @@ void play_round(Game*game, std::unique_ptr<Network>& network, int nb_errors) {
     }
 
     // *** Calcular output da rede para o input
-    auto output =  network->predict(input);
+    auto output =  network.predict(input);
 
     // gets the best options (sorts)
     int choose = 0;
@@ -210,8 +211,10 @@ void play_round(Game*game, std::unique_ptr<Network>& network, int nb_errors) {
     while (!put_piece(game, indices[choose++]))
     {
         printf("\nInvalid insertion.. \n");
+        nb_wrong_moves++;
     }
     printf("Piece inserted: %d\n,", indices[choose-1]);
+    return nb_wrong_moves;
 }
 
 

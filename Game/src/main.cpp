@@ -1,10 +1,8 @@
-#include <iostream>
-#include <Eigen/Core> 
+#include "TwoPlayerGame.h"
+#include "TicTacToe.h"
 
-
-using namespace std;
-
-int main() {
-    Eigen::VectorXi indices = Eigen::VectorXi::LinSpaced(playsProbs.rows(), 0, playsProbs.rows() - 1);
-    auto data = indices.data();
+int main(int argc, char ** argv) {
+    TwoPlayerGame *game = new TicTacToe();
+    game->PlayerVSPlayer();
+    delete game;
 }

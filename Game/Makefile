@@ -3,9 +3,11 @@ UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp
 BINARY = bin/teste
 ZIP = teste.zip
 INCLUDE_FOLDER = include
+EIGEN_FOLDER = ../lib/eigen
+MINIDNN_FOLDER = ../lib/MiniDNN/include
 
 all:
-	@g++ -Wall -Werror -g -I$(INCLUDE_FOLDER) $(UTIL) $(MAIN) -o $(BINARY) -lm
+	@g++ -Wall -Werror -g -I$(INCLUDE_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(UTIL) $(MAIN) -o $(BINARY) -lm
 
 run:
 	@./$(BINARY)
