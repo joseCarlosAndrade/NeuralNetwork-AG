@@ -28,7 +28,7 @@ include_directories(${EIGEN_INCLUDE_DIR} ${MINIDNN_INCLUDE_DIR} ${AG_DIR} ${AG_I
 target_include_directories(neural_n PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
 target_include_directories(velha PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(AG_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include)
-target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
+target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
 
 # Add executable target
 add_executable(my_executable ${SOURCE_FILES})

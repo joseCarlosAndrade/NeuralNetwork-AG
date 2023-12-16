@@ -36,6 +36,6 @@ class TwoPlayerGame {
         game_status ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2);
 
         ~TwoPlayerGame();
-}
+};
 
-#endif //TWOPLAYERGAME_H
+#endif 
