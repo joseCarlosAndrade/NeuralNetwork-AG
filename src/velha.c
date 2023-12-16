@@ -86,3 +86,4 @@ void print_board(Game * game) {
 int * get_board(Game *game) {
     return game->board;
 }
+

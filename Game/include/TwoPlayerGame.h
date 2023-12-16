@@ -1,6 +1,10 @@
 #ifndef TWOPLAYERGAME_H
 #define TWOPLAYERGAME_H
 
+#include "MiniDNN.h"
+
+using namespace MiniDNN;
+
 typedef enum { ONGOING, TIE, P1_VICTORY, P2_VICTORY } game_status;
 
 class TwoPlayerGame {
@@ -16,8 +20,8 @@ class TwoPlayerGame {
         virtual game_status CheckGameStatus() = 0;
         virtual void PrintBoard() = 0;
 
-        virtual int * GetGameState() = 0;
-        int * GetPlaysInputs(int *playsProbs);
+        virtual Eigen::VectorXd * GetGameState() = 0;
+        int * GetPlaysInputs(Eigen::VectorXd *playsProbs);
 
         void SwitchPlayer();
 
@@ -28,8 +32,8 @@ class TwoPlayerGame {
         int GetPlayInputLen();
 
         game_status PlayerVSPlayer();
-        game_status PlayerVSCom(Network com, int *errors);
-        game_status ComVSCom(Network com1, Network com2, int *errors1, int *errors2);
+        game_status PlayerVSCom(Network *com, int *out_errors);
+        game_status ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2);
 
         ~TwoPlayerGame();
 }

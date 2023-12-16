@@ -1,5 +1,5 @@
 MAIN = src/main.cpp
-UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp
+UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp 
 BINARY = bin/teste
 ZIP = teste.zip
 INCLUDE_FOLDER = include

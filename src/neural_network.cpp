@@ -14,7 +14,8 @@ typedef Eigen::VectorXd Vector;
 #include <vector>
 #include <memory>
 
-#define NUM_LAYERS 6
+#define ERROR_PENALTY 10
+
 
 struct player_st {
     Network net;
@@ -40,6 +41,7 @@ static void playerMutateFunction(void *data, const float mutation);
 
 
 // Neural Network associated functions
+void play_round(Game*game, std::unique_ptr<Network>& network);
 void serialize_parameters_txt(const std::string& filename, const std::vector<std::vector<Scalar>>& parameters);
 void deserialize_parameters_txt(const std::string& filename, std::vector<std::vector<Scalar>>& parameters);
 void generate_RNN(Network & net,int num_layers, vector<int> & num_neurons);
@@ -113,6 +115,43 @@ static void * playerInitFunction(void **dataVec, const int vecSize) {
 }
 
 
+static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses){
+    for(int i=0 ; i<vecSize ; i++) {
+        PLAYER *player = (PLAYER *) dataVec[i];
+        for(int j = 0; j < vecSize; j++){
+            if(i != j){
+                Game * game = initialize_game();
+                print_board(game);
+                int wrong_moves1 = 0;
+                int wrong_moves2 = 0;
+                while (game->game_status == ON) {
+                    // int pos;
+                    // if (game->player==P_1) play_round(game, vec_net[0]);
+                    // if (game->player==P_2) play_round(game, vec_net[1]);
+                    // else {
+                    //     scanf(" %d", &pos);
+                    //     while( !put_piece(game, pos) ) {
+                    //         printf("Position not valid. Try again. \n\n");
+                    //         scanf(" %d", &pos); 
+                    // }    
+                    // }
+
+                    check_game_state(game);
+                    print_board(game);
+                }
+
+                char * p = "O X";
+                printf("\nFinished! Game status: %d.\nCurrent player: %c\n", game->game_status, p[game->player*-1 + 1]);
+
+            }
+        }
+
+        // out_fitnesses[i] = ;
+    }
+}
+
+
+
 
 static void playerMutateFunction(void *data, const float mutation) {
     if(data == NULL) {
@@ -136,6 +175,43 @@ static void * playerCrossoverFunction(const void *data1, const void *data2) { //
     PLAYER *playerNew = player_create(sum_net);
     return playerNew;
     // Outra opção pegar 1 camada de um e 2 de outra
+}
+
+
+void play_round(Game*game, std::unique_ptr<Network>& network, int nb_errors) {
+
+    // get the inputs (board)
+    Matrix input(9,1);
+    for ( int i = 0; i < 9; i++) {
+        input(i,0) = (float)game->board[i];
+    }
+
+    if (game->player == P_2) { // neural network will always play as X (player 1)
+        for (int i = 0; i < 9; i ++) {
+            input(i,0) *= -1;
+        }
+    }
+
+    // *** Calcular output da rede para o input
+    auto output =  network->predict(input);
+
+    // gets the best options (sorts)
+    int choose = 0;
+
+    // Get the indices of the sorted elements
+    Eigen::VectorXi indices = Eigen::VectorXi::LinSpaced(output.rows(), 0, output.rows() - 1);
+    std::sort(indices.data(), indices.data() + indices.size(), [&output](int i, int j) {
+        return output(i, 0) < output(j, 0);});
+
+    // Print the results
+    std::cout << "\n Player:" << game->player <<" just played \n";
+    std::cout << "Indices of Sorted Elements:\n" << indices << "\n";
+
+    while (!put_piece(game, indices[choose++]))
+    {
+        printf("\nInvalid insertion.. \n");
+    }
+    printf("Piece inserted: %d\n,", indices[choose-1]);
 }
 
 
@@ -229,6 +305,7 @@ void print_parameters(vector<vector<Scalar>> parameters){
 
 
 
+
 void scaleAndAdd(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor) {
     for (auto& row : matrix) {
         for (auto& element : row) {
@@ -266,6 +343,9 @@ std::vector<std::vector<Scalar>> sumVectorsElementWise(const std::vector<std::ve
 
     return result;
 }
+
+
+
 
 
 
