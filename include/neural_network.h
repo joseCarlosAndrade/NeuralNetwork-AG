@@ -11,7 +11,8 @@
 #include "util.h"
 #include "type.h"
 #include "typeEvolvable.h"
-#include "velha.h"
+#include "TicTacToe.h"
+#include "TwoPlayerGame.h"
 
 
 typedef Eigen::MatrixXd Matrix;
@@ -34,9 +35,6 @@ std::vector<std::unique_ptr<Network>> generate_vector_RNN(int num_RNN, int num_l
 // Function to print neural_network parameters 
 void print_parameters(std::vector<std::vector<Scalar>> parameters);
 
-#include "util.h"
-#include "type.h"
-#include "typeEvolvable.h"
 
 typedef struct player_st PLAYER;
 
