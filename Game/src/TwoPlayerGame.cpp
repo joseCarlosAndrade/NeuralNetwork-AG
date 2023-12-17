@@ -43,6 +43,8 @@ int TwoPlayerGame::GetPlayInputLen() {
 }
 
 game_status TwoPlayerGame::PlayerVSPlayer() {
+    this->PrintBoard();
+    
     while(this->CheckGameStatus() == ONGOING) {
         int input;
         do {
@@ -59,6 +61,8 @@ game_status TwoPlayerGame::PlayerVSPlayer() {
 }
 
 game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbose) {
+    if(verbose || this->turnPlayer == 1) this->PrintBoard();
+
     while(this->CheckGameStatus() == ONGOING) {
         int input;
         if(this->turnPlayer == 1) {
@@ -75,7 +79,7 @@ game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbo
             int i = 0;
             while(!this->IsSpaceValid(inputs[i])) {
                 i++;
-                *out_errors++;
+                *out_errors += 1;
             }
             input = inputs[i];
         }
@@ -89,6 +93,8 @@ game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbo
 }
 
 game_status TwoPlayerGame::ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2, bool verbose) {
+    if(verbose) this->PrintBoard();
+
     while(this->CheckGameStatus() == ONGOING) {
         Network *com = (this->turnPlayer == 1) ? com1 : com2;
         int *out_errors = (this->turnPlayer == 1) ? out_errors1 : out_errors2;
@@ -100,7 +106,7 @@ game_status TwoPlayerGame::ComVSCom(Network *com1, Network *com2, int *out_error
         int i = 0;
         while(!this->IsSpaceValid(inputs[i])) {
             i++;
-            *out_errors++;
+            *out_errors += 1;
         }
 
         this->PutPiece(inputs[i]);
