@@ -41,11 +41,15 @@ typedef struct player_st PLAYER;
 T * player_getType();
 T_EVOLVABLE * player_getTypeEvolvable();
 
-PLAYER * player_create(const float x);
-static void playerEraseFunction(void **data_addr);
+void player_erase(PLAYER **player_addr);
+
+
 Network player_getElement(const PLAYER *player); // getX
-// void player_erase(PLAYER **player_addr);
 
 
+
+
+// delete after
+void * playerInitFunction(void **dataVec, const int vecSize);
 
 #endif 

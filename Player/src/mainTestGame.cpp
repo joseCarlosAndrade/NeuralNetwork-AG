@@ -7,6 +7,8 @@
 
 #include "neural_network.h"
 
+using namespace MiniDNN;
+
 int main() {
     T *chromosomeType = player_getType();
     T_EVOLVABLE *chromosomeTypeEvolvable = player_getTypeEvolvable();
@@ -32,7 +34,10 @@ int main() {
                                             hasInheritance,
                                             chromosomeType, chromosomeTypeEvolvable);
 
-    if(!geneticAlgorithm_init(evolution)) {
+
+    playerInitFunction(nullptr, 0);
+
+    if(!geneticAlgorithm_init(evolution)){
         printf("init falhou!");
     }
 
@@ -45,7 +50,6 @@ int main() {
     printf("Generation: %d\n", gen);
 
 
-
     FILE *bestInfo = fopen("evol_data/bestInfo.txt", "w");
 
     float bestFitness;
@@ -55,7 +59,6 @@ int main() {
     fprintf(bestInfo, "Fitness: %f", bestFitness);
 
     fclose(bestInfo);
-
 
 
     FILE *history = fopen("evol_data/history.csv", "w");
@@ -78,8 +81,7 @@ int main() {
     }
 
     fclose(history);
-
-    playerEraseFunction((void **)&best);
+    player_erase(&best);
     free(bestFistnessHistory);
     free(meanFistnessHistory);
 

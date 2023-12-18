@@ -31,13 +31,13 @@ static void * playerCopyFunction(const void *data);
 static comparison playerCompareFunction(const void *data1, const void *data2); // nao precisa
 static void playerPrintFunction(const void *data); // nao precisa
 
- 
-void player_erase(PLAYER **player_addr);
 
-static void * playerInitFunction(void **dataVec, const int vecSize);
+
+// static void * playerInitFunction(void **dataVec, const int vecSize);
 static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses);
 static void * playerCrossoverFunction(const void *data1, const void *data2);
 static void playerMutateFunction(void *data, const float mutation);
+static void playerEraseFunction(void **data_addr);
 
 
 // Neural Network associated functions
@@ -57,7 +57,6 @@ T * player_getType() {
     T *playerType = type_create(sizeof(PLAYER), playerCopyFunction, playerCompareFunction, playerPrintFunction, playerEraseFunction);
     return playerType;
 }
-
 
 
 T_EVOLVABLE * player_getTypeEvolvable() {
@@ -124,9 +123,9 @@ void player_erase(PLAYER **player_addr) {
 }
 
 
-static void * playerInitFunction(void **dataVec, const int vecSize) { 
+void * playerInitFunction(void **dataVec, const int vecSize) { 
     Network net;
-    PLAYER *playerNew;
+    PLAYER *playerNew = nullptr;
     PLAYER tempPlayer;
     generate_RNN(net, tempPlayer.num_layers, tempPlayer.num_neurons);
     if(dataVec == NULL) { //use net as it is
@@ -142,7 +141,6 @@ static void * playerInitFunction(void **dataVec, const int vecSize) {
         multiplyMatrixScalar(parameters, vecSize);
         net.set_parameters(parameters);
     }
-
     playerNew = player_create(net);
     return playerNew;
 }

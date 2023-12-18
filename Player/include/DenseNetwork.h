@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
-#include <memory>
-#include <Eigen/Core> 
+#include <Eigen/Core>
+#include <stdlib.h>
 #include "MiniDNN.h" 
 
 using namespace std;
@@ -15,6 +15,8 @@ class DenseNetwork {
     private:
         Network net;
         vector<int> layers;
+
+        static vector<vector<double>> InitRandomParameters(vector<int>& layers);
     
     public:
         DenseNetwork(vector<int>& layers);

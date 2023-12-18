@@ -1,7 +1,26 @@
 #include "DenseNetwork.h"
-#include <cstdlib> 
 
-DenseNetwork::DenseNetwork(vector<int>& layers) {
+vector<vector<double>> DenseNetwork::InitRandomParameters(vector<int>& layers) {
+    vector<vector<double>> parameters;
+    
+    int numLayers = layers.size();
+    for(size_t i=0 ; i<numLayers-1 ; i++) {
+        parameters.push_back(vector<double>());
+        for(size_t j=0 ; j<layers[i]*layers[i+1] ; j++) {
+            double random = (double)rand() / (double)RAND_MAX;
+            parameters[i].push_back(random - 0.5);
+        }
+    }
+
+    return parameters;
+}
+
+DenseNetwork::DenseNetwork(vector<int>& layers)
+: DenseNetwork(layers, DenseNetwork::InitRandomParameters(layers)) {
+
+}
+
+DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters) {
     this->layers = layers;
 
     int numLayers = layers.size();
@@ -9,12 +28,8 @@ DenseNetwork::DenseNetwork(vector<int>& layers) {
         this->net.add_layer(new FullyConnected<ReLU>(layers[i], layers[i+1]));
     }
     this->net.add_layer(new FullyConnected<Softmax>(layers[numLayers-2], layers[numLayers-1]));
-    
-    this->net.init(0, 0.01, static_cast<unsigned int>(std::time(nullptr)));
-}
 
-DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters)
-: DenseNetwork(layers) {
+    this->net.init();
     this->net.set_parameters(parameters);
 }
 

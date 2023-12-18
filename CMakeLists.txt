@@ -5,7 +5,7 @@ project(MyProject)
 set(CMAKE_CXX_STANDARD 11)
 
 # Specify the source file for your code
-set(SOURCE_FILES Player/src/mainTestGame.cpp)
+set(SOURCE_FILES Player/src/main.cpp)
 
 # Specify the paths to Eigen and MiniDNN
 set(EIGEN_INCLUDE_DIR lib//eigen)
@@ -33,8 +33,7 @@ target_include_directories(neural_n PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Player/in
 target_include_directories(AG_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include)
 target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
 target_include_directories(tictactoe PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
-target_include_directories(denseNetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Player/include ${CMAKE_CURRENT_SOURCE_DIR}/Game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include 
-                                                ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
+target_include_directories(denseNetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Player/include ${CMAKE_CURRENT_SOURCE_DIR}/Game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
 # Add executable target
 add_executable(my_executable ${SOURCE_FILES})
 
