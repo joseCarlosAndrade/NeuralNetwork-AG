@@ -1,10 +1,12 @@
 #ifndef TICTACTOE_H
 #define TICTACTOE_H
 
+#include <Eigen/Core> 
 #include "MiniDNN.h"
 #include "TwoPlayerGame.h"
 
 using namespace std;
+using namespace Eigen;
 using namespace MiniDNN;
 
 class TicTacToe : public TwoPlayerGame {
@@ -14,7 +16,7 @@ class TicTacToe : public TwoPlayerGame {
         game_status CheckGameStatus() override;
         void PrintBoard() override;
 
-        Eigen::VectorXd GetGameState() override;
+        VectorXd GetGameState() override;
 
     public:
         TicTacToe();

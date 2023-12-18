@@ -1,9 +1,14 @@
 #include "TwoPlayerGame.h"
 
-vector<int> TwoPlayerGame::GetPlaysInputs(Eigen::VectorXd& playsProbs) {
-    Eigen::VectorXi indices = Eigen::VectorXi::LinSpaced(playsProbs.rows(), 0, playsProbs.rows() - 1);
-    std::sort(indices.data(), indices.data() + indices.size(), [&playsProbs](int i, int j) { return playsProbs(i, 0) > playsProbs(j, 0); });
-    return vector<int>(indices.data(), indices.data() + indices.size());
+int * TwoPlayerGame::GetPlaysInputs(VectorXd& playsProbs) {
+    VectorXi indices = VectorXi::LinSpaced(playsProbs.rows(), 0, playsProbs.rows() - 1);
+    sort(indices.data(), indices.data() + indices.size(), [&playsProbs](int i, int j) { return playsProbs(i, 0) > playsProbs(j, 0); });
+
+    int *playsInputs = new int[indices.size()];
+    for(int i=0 ; i<indices.size() ; i++) {
+        playsInputs[i] = indices[i];
+    }
+    return playsInputs;
 }
 
 void TwoPlayerGame::SwitchPlayer() {
@@ -14,8 +19,6 @@ void TwoPlayerGame::SwitchPlayer() {
        }
    }
 }
-
-
 
 TwoPlayerGame::TwoPlayerGame(int boardRows, int boardCols, int gameStateLen, int playInputLen) {
     this->boardRows = boardRows;
@@ -43,6 +46,8 @@ int TwoPlayerGame::GetPlayInputLen() {
 }
 
 game_status TwoPlayerGame::PlayerVSPlayer() {
+    this->PrintBoard();
+    
     while(this->CheckGameStatus() == ONGOING) {
         int input;
         do {
@@ -59,6 +64,8 @@ game_status TwoPlayerGame::PlayerVSPlayer() {
 }
 
 game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbose) {
+    if(verbose || this->turnPlayer == 1) this->PrintBoard();
+
     while(this->CheckGameStatus() == ONGOING) {
         int input;
         if(this->turnPlayer == 1) {
@@ -68,16 +75,17 @@ game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbo
             } while(!this->IsSpaceValid(input));
         }
         else {
-            Eigen::VectorXd gameState = this->GetGameState();
-            Eigen::VectorXd plays = com->predict(gameState);
-            vector<int> inputs = this->GetPlaysInputs(plays);
+            VectorXd gameState = this->GetGameState();
+            VectorXd plays = com->predict(gameState);
+            int *inputs = this->GetPlaysInputs(plays);
 
             int i = 0;
             while(!this->IsSpaceValid(inputs[i])) {
                 i++;
-                *out_errors++;
+                *out_errors += 1;
             }
             input = inputs[i];
+            delete[] inputs;
         }
 
         this->PutPiece(input);
@@ -89,21 +97,25 @@ game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbo
 }
 
 game_status TwoPlayerGame::ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2, bool verbose) {
+    if(verbose) this->PrintBoard();
+
     while(this->CheckGameStatus() == ONGOING) {
         Network *com = (this->turnPlayer == 1) ? com1 : com2;
         int *out_errors = (this->turnPlayer == 1) ? out_errors1 : out_errors2;
 
-        Eigen::VectorXd gameState = this->GetGameState();
-        Eigen::VectorXd plays = com->predict(gameState);
-        vector<int> inputs = this->GetPlaysInputs(plays);
+        VectorXd gameState = this->GetGameState();
+        VectorXd plays = com->predict(gameState);
+        int *inputs = this->GetPlaysInputs(plays);
 
         int i = 0;
         while(!this->IsSpaceValid(inputs[i])) {
             i++;
-            *out_errors++;
+            *out_errors += 1;
         }
+        int input = inputs[i];
+        delete[] inputs;
 
-        this->PutPiece(inputs[i]);
+        this->PutPiece(input);
         if(verbose) this->PrintBoard();
         this->SwitchPlayer();
     }
@@ -113,7 +125,7 @@ game_status TwoPlayerGame::ComVSCom(Network *com1, Network *com2, int *out_error
 
 TwoPlayerGame::~TwoPlayerGame() {
     for(int i=0 ; i<this->boardRows ; i++) {
-        delete this->board[i];
+        delete[] this->board[i];
     }
-    delete this->board;
+    delete[] this->board;
 }

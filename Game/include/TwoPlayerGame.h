@@ -1,9 +1,11 @@
 #ifndef TWOPLAYERGAME_H
 #define TWOPLAYERGAME_H
 
+#include <Eigen/Core> 
 #include "MiniDNN.h"
 
 using namespace std;
+using namespace Eigen;
 using namespace MiniDNN;
 
 typedef enum {
@@ -26,8 +28,8 @@ class TwoPlayerGame {
         virtual game_status CheckGameStatus() = 0;
         virtual void PrintBoard() = 0;
 
-        virtual Eigen::VectorXd GetGameState() = 0;
-        vector<int> GetPlaysInputs(Eigen::VectorXd& playsProbs);
+        virtual VectorXd GetGameState() = 0;
+        int * GetPlaysInputs(VectorXd& playsProbs);
 
         void SwitchPlayer();
 

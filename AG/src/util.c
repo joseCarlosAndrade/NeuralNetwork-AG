@@ -1,12 +1,12 @@
 #include "../include/util.h"
 
 char * string_copy(const char *string) {
-    char *copia = NULL;
+    char *stringCopy = NULL;
     if(string != NULL)  {
-        copia = calloc(strlen(string) + 1, sizeof(char));
-        strcpy(copia, string);
+        stringCopy = (char *) calloc(strlen(string) + 1, sizeof(char));
+        strcpy(stringCopy, string);
     }
-    return copia;
+    return stringCopy;
 }
 
 void string_free(char **string_addr) {
