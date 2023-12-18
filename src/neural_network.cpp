@@ -142,9 +142,6 @@ static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out
     }
 }
 
-
-
-
 static void playerMutateFunction(void *data, const float mutation) {
     if(data == NULL) {
         return;
