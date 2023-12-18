@@ -27,10 +27,10 @@ struct player_st {
 PLAYER * player_create(const Network & net);
 static void * playerCopyFunction(const void *data);
 
-/*
-static comparison funcaoEscrotaCompareFunction(const void *data1, const void *data2); // nao precisa
-static void funcaoEscrotaPrintFunction(const void *data); // nao precisa
-*/
+
+static comparison playerCompareFunction(const void *data1, const void *data2); // nao precisa
+static void playerPrintFunction(const void *data); // nao precisa
+
 
 static void playerEraseFunction(void **data_addr); 
 
@@ -50,6 +50,28 @@ void print_parameters(vector<vector<Scalar>> parameters);
 void multiplyMatrixScalar(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor);
 std::vector<std::vector<Scalar>> sumVectorsElementWise(const std::vector<std::vector<Scalar>>& vec1, const std::vector<std::vector<Scalar>>& vec2);
 void scaleAndAdd(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor);
+
+
+
+T * player_getType() { 
+    T *playerType = type_create(sizeof(PLAYER), playerCopyFunction, playerCompareFunction, playerPrintFunction, playerEraseFunction);
+    return playerType;
+}
+
+
+
+T_EVOLVABLE * player_getTypeEvolvable() {
+    T_EVOLVABLE *playerTypeEvolvable = typeEvolvable_create(playerInitFunction, playerEvaluateFunction, playerCrossoverFunction, playerMutateFunction);
+    return playerTypeEvolvable;
+}
+
+
+
+Network player_getElement(const PLAYER *player){
+    checkNullPointerError(player);
+    return player->net;
+}
+
 
 
 PLAYER * player_create(const Network & net) {
