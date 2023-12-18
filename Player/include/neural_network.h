@@ -42,6 +42,7 @@ T * player_getType();
 T_EVOLVABLE * player_getTypeEvolvable();
 
 PLAYER * player_create(const float x);
+static void playerEraseFunction(void **data_addr);
 Network player_getElement(const PLAYER *player); // getX
 // void player_erase(PLAYER **player_addr);
 

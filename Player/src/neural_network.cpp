@@ -31,8 +31,8 @@ static void * playerCopyFunction(const void *data);
 static comparison playerCompareFunction(const void *data1, const void *data2); // nao precisa
 static void playerPrintFunction(const void *data); // nao precisa
 
-
-static void playerEraseFunction(void **data_addr); 
+ 
+void player_erase(PLAYER **player_addr);
 
 static void * playerInitFunction(void **dataVec, const int vecSize);
 static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses);
@@ -65,6 +65,9 @@ T_EVOLVABLE * player_getTypeEvolvable() {
     return playerTypeEvolvable;
 }
 
+static void playerEraseFunction(void **data_addr) {
+    player_erase((PLAYER **) data_addr);
+}
 
 
 Network player_getElement(const PLAYER *player){
@@ -72,6 +75,13 @@ Network player_getElement(const PLAYER *player){
     return player->net;
 }
 
+static comparison playerCompareFunction(const void *data1, const void *data2){   // LEMBRAR DE MUDAR - ERROR
+    return EQUAL;
+}
+
+static void playerPrintFunction(const void *data){
+
+}
 
 
 PLAYER * player_create(const Network & net) {
@@ -117,7 +127,8 @@ void player_erase(PLAYER **player_addr) {
 static void * playerInitFunction(void **dataVec, const int vecSize) { 
     Network net;
     PLAYER *playerNew;
-    generate_RNN(net, playerNew->num_layers, playerNew->num_neurons);
+    PLAYER tempPlayer;
+    generate_RNN(net, tempPlayer.num_layers, tempPlayer.num_neurons);
     if(dataVec == NULL) { //use net as it is
     }
     else {

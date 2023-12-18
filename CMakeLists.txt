@@ -5,7 +5,7 @@ project(MyProject)
 set(CMAKE_CXX_STANDARD 11)
 
 # Specify the source file for your code
-set(SOURCE_FILES Player/src/main.cpp)
+set(SOURCE_FILES Player/src/mainTestGame.cpp)
 
 # Specify the paths to Eigen and MiniDNN
 set(EIGEN_INCLUDE_DIR lib//eigen)
@@ -16,7 +16,7 @@ set(AG_INCLUDE_DIR AG//include)
 set(GAME_DIR game//include)
 
 #add libraries
-add_library(neural_n src/neural_network.cpp)
+add_library(neural_n Player/src/neural_network.cpp)
 # add_library(velha src/velha.c)
 #AG library
 add_library(AG_lib AG/src/geneticAlgorithm.c AG/src/input.c AG/src/type.c AG/src/typeEvolvable.c AG/src/util.c)
@@ -28,7 +28,7 @@ add_library(denseNetwork Player/src/DenseNetwork.cpp)
 include_directories(${EIGEN_INCLUDE_DIR} ${MINIDNN_INCLUDE_DIR} ${AG_DIR} ${AG_INCLUDE_DIR})
 
 # Specify include directories for the library target
-target_include_directories(neural_n PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/game/include)
+target_include_directories(neural_n PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Player/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/game/include)
 # target_include_directories(velha PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(AG_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include)
 target_include_directories(game PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/game/include ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/AG/include ${MINIDNN_INCLUDE_DIR} ${EIGEN_INCLUDE_DIR})
