@@ -11,7 +11,6 @@ int main(int argc, char ** argv) {
     game->PlayerVSPlayer();
     delete game;
 
-
     T *chromosomeType = funcaoEscrota_getType();
     T_EVOLVABLE *chromosomeTypeEvolvable = funcaoEscrota_getTypeEvolvable();
 

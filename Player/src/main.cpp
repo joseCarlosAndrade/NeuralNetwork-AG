@@ -1,6 +1,10 @@
 #include "DenseNetwork.h"
+#include <cstdlib> 
+#include<windows.h> # delay function
+
 
 using namespace std;
+
 
 void print_parameters(vector<vector<Scalar>> parameters){
     for (size_t i = 0; i < parameters.size(); ++i) {
@@ -15,11 +19,13 @@ void print_parameters(vector<vector<Scalar>> parameters){
 }
 
 int main() {
+
     vector<int> layers = {2, 5, 3};
     DenseNetwork mlp = DenseNetwork(layers);
+    Sleep(1500);
     DenseNetwork mlp2 = DenseNetwork(layers);\
 
-    DenseNetwork ko = DenseNetwork(DenseNetwork::LoadFrom("hey"));
+    // DenseNetwork ko = DenseNetwork(DenseNetwork::LoadFrom("hey"));
 
     vector<vector<double>> parameters;
 

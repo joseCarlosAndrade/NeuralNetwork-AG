@@ -1,4 +1,5 @@
 #include "DenseNetwork.h"
+#include <cstdlib> 
 
 DenseNetwork::DenseNetwork(vector<int>& layers) {
     this->layers = layers;
@@ -8,7 +9,8 @@ DenseNetwork::DenseNetwork(vector<int>& layers) {
         this->net.add_layer(new FullyConnected<ReLU>(layers[i], layers[i+1]));
     }
     this->net.add_layer(new FullyConnected<Softmax>(layers[numLayers-2], layers[numLayers-1]));
-    this->net.init();
+    
+    this->net.init(0, 0.01, static_cast<unsigned int>(std::time(nullptr)));
 }
 
 DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters)
