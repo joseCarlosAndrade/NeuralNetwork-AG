@@ -22,6 +22,9 @@ int main() {
     DenseNetwork mlp = DenseNetwork(layers);
     DenseNetwork mlp2 = DenseNetwork(layers);
 
+    VectorXd a(5);
+    mlp.Predict(a); // COMO DAR O CAST?
+
     vector<vector<double>> parameters;
 
     parameters = mlp.GetParameters();
