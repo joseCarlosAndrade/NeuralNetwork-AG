@@ -6,7 +6,7 @@
 
 int main() {
     T *chromosomeType = funcaoEscrota_getType();
-    T_EVOLVABLE *chromosomeTypeEvolvable = funcaoEscrota_getTypeEvolvable();
+    T_EVOL *chromosomeTypeEvolvable = funcaoEscrota_getTypeEvolvable();
 
     int populationSize = 30;
     float mutationBase = 0.02;

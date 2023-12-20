@@ -1,5 +1,5 @@
 MAIN = src/main.cpp
-UTIL = src/DenseNetwork.cpp src/Player.cpp
+UTIL = src/DenseNetwork.cpp src/Player.cpp include/Player-inl.cpp
 AG_UTIL = ../AG/src/util.c ../AG/src/type.c ../AG/src/typeEvolvable.c
 GAME_UTIL = ../Game/src/TwoPlayerGame.cpp ../Game/src/TicTacToe.cpp
 BINARY = bin/teste
@@ -11,7 +11,7 @@ EIGEN_FOLDER = ../lib/eigen
 MINIDNN_FOLDER = ../lib/MiniDNN/include
 
 all:
-	@g++ -Wall -Werror -g -I$(INCLUDE_FOLDER) -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(UTIL) $(AG_UTIL) $(GAME_UTIL) $(MAIN) -o $(BINARY) -lm
+	@g++ -std=c++20 -Wall -Werror -g -I$(INCLUDE_FOLDER) -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(UTIL) $(AG_UTIL) $(GAME_UTIL) $(MAIN) -o $(BINARY) -lm
 
 run:
 	@./$(BINARY)

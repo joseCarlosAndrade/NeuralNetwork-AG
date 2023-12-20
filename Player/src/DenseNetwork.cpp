@@ -1,26 +1,6 @@
 #include "DenseNetwork.h"
 
-vector<vector<double>> DenseNetwork::InitRandomParameters(vector<int>& layers) {
-    vector<vector<double>> parameters;
-    
-    int numLayers = layers.size();
-    for(size_t i=0 ; i<numLayers-1 ; i++) {
-        parameters.push_back(vector<double>());
-        for(size_t j=0 ; j<layers[i]*layers[i+1] ; j++) {
-            double random = (double)rand() / (double)RAND_MAX;
-            parameters[i].push_back(random - 0.5);
-        }
-    }
-
-    return parameters;
-}
-
-DenseNetwork::DenseNetwork(vector<int>& layers)
-: DenseNetwork(layers, DenseNetwork::InitRandomParameters(layers)) {
-
-}
-
-DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters) {
+void DenseNetwork::Init(vector<int>& layers, vector<vector<double>>& parameters) {
     this->layers = layers;
 
     int numLayers = layers.size();
@@ -33,37 +13,51 @@ DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& paramete
     this->net.set_parameters(parameters);
 }
 
-DenseNetwork::DenseNetwork(tuple<vector<int>, vector<vector<double>>> netInfo)
-: DenseNetwork(get<0>(netInfo), get<1>(netInfo)) {
+DenseNetwork::DenseNetwork(vector<int>& layers) {
+    vector<vector<double>> parameters;
     
+    int numLayers = layers.size();
+    for(int i=0 ; i<numLayers-1 ; i++) {
+        parameters.push_back(vector<double>());
+        int numParams = layers[i] * layers[i+1] + layers[i+1];
+        for(int j=0 ; j<numParams ; j++) {
+            double random = (double)rand() / (double)RAND_MAX;
+            parameters[i].push_back(random - 0.5);
+        }
+    }
+
+    this->Init(layers, parameters);
 }
 
-vector<vector<double>> DenseNetwork::GetParameters() {
-    return this->net.get_parameters();
+DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters) {
+    this->Init(layers, parameters);
 }
 
-void DenseNetwork::SetParameters(vector<vector<double>>& parameters) {
-    this->net.set_parameters(parameters);
+DenseNetwork::DenseNetwork(const DenseNetwork& network) {
+    vector<int> layers = network.layers;
+    vector<vector<double>> parameters = network.net.get_parameters();
+    this->Init(layers, parameters);
 }
 
-tuple<vector<int>, vector<vector<double>>> DenseNetwork::LoadFrom(const string& filename) {
+DenseNetwork::DenseNetwork(const string& filename) {
+    vector<int> layers;
+    vector<vector<double>> parameters;
+
     ifstream file(filename);
     if(!file.is_open()) {
         cerr << "Error opening file for reading: " << filename << endl;
-        return make_tuple(vector<int>(), vector<vector<double>>());
+        return;
     }
 
     string line;
 
     getline(file, line);
     istringstream iss(line);
-    vector<int> layers;
     int numNeurons;
     while(iss >> numNeurons) {
         layers.push_back(numNeurons);
     }
 
-    vector<vector<double>> parameters;
     while(getline(file, line)) {
         istringstream iss(line);
         vector<double> layerParams;
@@ -76,7 +70,30 @@ tuple<vector<int>, vector<vector<double>>> DenseNetwork::LoadFrom(const string& 
 
     file.close();
 
-    return make_tuple(layers, parameters);
+    this->Init(layers, parameters);
+}
+
+vector<int> DenseNetwork::GetLayers() {
+    return this->layers;
+}
+
+vector<vector<double>> DenseNetwork::GetParameters() {
+    return this->net.get_parameters();
+}
+
+void DenseNetwork::SetParameters(vector<vector<double>>& parameters) {
+    this->net.set_parameters(parameters);
+}
+
+MatrixXd DenseNetwork::Predict(MatrixXd& input) {
+    return this->net.predict(input);
+}
+
+VectorXd DenseNetwork::Predict(VectorXd& input) {
+    MatrixXd matrixInput = Map<MatrixXd>(input.data(), input.size(), 1);
+    MatrixXd matrixOutput = this->net.predict(matrixInput);
+    VectorXd output = Eigen::Map<Eigen::VectorXd>(matrixOutput.data(), matrixOutput.size());
+    return output;
 }
 
 void DenseNetwork::SaveAs(const string& filename) {

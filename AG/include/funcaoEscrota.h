@@ -8,7 +8,7 @@
 typedef struct funcaoEscrota_st FUNCAOESCROTA;
 
 T * funcaoEscrota_getType();
-T_EVOLVABLE * funcaoEscrota_getTypeEvolvable();
+T_EVOL * funcaoEscrota_getTypeEvolvable();
 
 FUNCAOESCROTA * funcaoEscrota_create(const float x);
 float funcaoEscrota_getX(const FUNCAOESCROTA *funcaoEscrota);

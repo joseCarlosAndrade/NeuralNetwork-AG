@@ -28,8 +28,8 @@ T * funcaoEscrota_getType() {
     return funcaoEscrotaType;
 }
 
-T_EVOLVABLE * funcaoEscrota_getTypeEvolvable() {
-    T_EVOLVABLE *funcaoEscrotaTypeEvolvable = typeEvolvable_create(funcaoEscrotaInitFunction, funcaoEscrotaEvaluateFunction, funcaoEscrotaCrossoverFunction, funcaoEscrotaMutateFunction);
+T_EVOL * funcaoEscrota_getTypeEvolvable() {
+    T_EVOL *funcaoEscrotaTypeEvolvable = typeEvolvable_create(funcaoEscrotaInitFunction, funcaoEscrotaEvaluateFunction, funcaoEscrotaCrossoverFunction, funcaoEscrotaMutateFunction);
     return funcaoEscrotaTypeEvolvable;
 }
 

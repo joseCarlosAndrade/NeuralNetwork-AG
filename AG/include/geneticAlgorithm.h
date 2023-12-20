@@ -46,7 +46,7 @@ GA * geneticAlgorithm_create(const int populationSize,
                              const predation_method predationMethod, const int predationPeriod,
                              const boolean isSexual,
                              const boolean hasInheritance,
-                             T *populationType, T_EVOLVABLE *populationTypeEvolvable);
+                             T *populationType, T_EVOL *populationTypeEvolvable);
 
 boolean geneticAlgorithm_init(GA *geneticAlgorithm);
 boolean geneticAlgorithm_run(GA *geneticAlgorithm, const int numGenerations);

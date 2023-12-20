@@ -34,7 +34,7 @@ struct geneticAlgorithm_st {
     float *meanFitnessHistory;
 
     T *populationType;
-    T_EVOLVABLE *populationTypeEvolvable;
+    T_EVOL *populationTypeEvolvable;
 };
 
 
@@ -109,7 +109,7 @@ static void eraseFitnessMat(float ***fitnessMat_addr, int matRows);
 #define PERIODS_TRY_REDUCE_MUTATION 2
 #define INHERITANCE_LENGTH 4
 
-GA * geneticAlgorithm_create(const int populationSize, const float mutationBase, const float mutationMultiplier, const int mutationAdaptationStuckPeriod, const selection_method selectionMethod, const genocide_method genocideMethod, const int genocideStuckPeriod, const predation_method predationMethod, const int predationPeriod, const boolean isSexual, const boolean hasInheritance, T *populationType, T_EVOLVABLE *populationTypeEvolvable) {
+GA * geneticAlgorithm_create(const int populationSize, const float mutationBase, const float mutationMultiplier, const int mutationAdaptationStuckPeriod, const selection_method selectionMethod, const genocide_method genocideMethod, const int genocideStuckPeriod, const predation_method predationMethod, const int predationPeriod, const boolean isSexual, const boolean hasInheritance, T *populationType, T_EVOL *populationTypeEvolvable) {
     GA *geneticAlgorithm = (GA *) malloc(1*sizeof(GA));
     if(geneticAlgorithm == NULL) {
         return NULL;

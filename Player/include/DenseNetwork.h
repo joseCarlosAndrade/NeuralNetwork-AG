@@ -16,17 +16,21 @@ class DenseNetwork {
         Network net;
         vector<int> layers;
 
-        static vector<vector<double>> InitRandomParameters(vector<int>& layers);
+        void Init(vector<int>& layers, vector<vector<double>>& parameters);
     
     public:
         DenseNetwork(vector<int>& layers);
         DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters);
-        DenseNetwork(tuple<vector<int>, vector<vector<double>>> netInfo);
+        DenseNetwork(const DenseNetwork& network);
+        DenseNetwork(const string& filename);
 
+        vector<int> GetLayers();
         vector<vector<double>> GetParameters();
         void SetParameters(vector<vector<double>>& parameters);
 
-        static tuple<vector<int>, vector<vector<double>>> LoadFrom(const string& filename);
+        MatrixXd Predict(MatrixXd& input);
+        VectorXd Predict(VectorXd& input);
+
         void SaveAs(const string& filename);
 
         DenseNetwork operator+(const DenseNetwork& other);
