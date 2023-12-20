@@ -84,7 +84,8 @@ static void playerPrintFunction(const void *data){
 
 
 PLAYER * player_create(const Network & net) {
-    PLAYER * player_created = (PLAYER *) malloc(1*sizeof(PLAYER));    // FREE MEMORY
+    PLAYER * player_created = new PLAYER;    // FREE MEMORY
+    // PLAYER * player_created = (PLAYER *) malloc(1*sizeof(PLAYER));    // FREE MEMORY
     auto parameters = net.get_parameters();
     
     if(player_created == NULL) {
@@ -158,7 +159,7 @@ static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out
                 auto game = TicTacToe();
                 int wrong_moves1 = 0;
                 int wrong_moves2 = 0;
-                auto game_result = game.ComVSCom(&player1->net, &player2->net, &wrong_moves1, &wrong_moves2, true);
+                auto game_result = game.ComVSCom(&player1->net, &player2->net, &wrong_moves1, &wrong_moves2, false);
                 // OUTFITNESS ESTA INICIALIZADO?
                 if(game_result == P1_VICTORY){
                     out_fitnesses[i] += VICTORY_PREMIUM;
@@ -190,8 +191,12 @@ static void playerMutateFunction(void *data, const float mutation) {
 static void * playerCrossoverFunction(const void *data1, const void *data2) { // REVISAR TEORIA CROSS OVER
     PLAYER *player1 = (PLAYER *) data1;
     PLAYER *player2 = (PLAYER *) data2;
-    Network sum_net = (player1->net + player2->net);
-    auto parameters = sum_net.get_parameters();
+    // sum nets
+    Network sum_net;
+    PLAYER tempPlayer;  // create temporary to get parameters
+    generate_RNN(sum_net, tempPlayer.num_layers, tempPlayer.num_neurons);
+    // sum two networks
+    auto parameters = sumVectorsElementWise(player1->net.get_parameters(), player2->net.get_parameters());
     // divide by 2
     multiplyMatrixScalar(parameters, 0.5);
     sum_net.set_parameters(parameters);
@@ -351,18 +356,18 @@ void multiplyMatrixScalar(std::vector<std::vector<Scalar>>& matrix, Scalar scale
 std::vector<std::vector<Scalar>> sumVectorsElementWise(const std::vector<std::vector<Scalar>>& vec1,
                                                       const std::vector<std::vector<Scalar>>& vec2) {
     // Check if the vectors have the same size
-    if (vec1.size() != vec2.size() || (vec1.size() > 0 && vec1[0].size() != vec2[0].size())) {
+    if (vec1.size() != vec2.size()) {
         std::cerr << "Vectors must have the same size for element-wise addition." << std::endl;
         return {};
     }
 
-    // Initialize the result vector with the same size as the input vectors
-    std::vector<std::vector<Scalar>> result(vec1.size(), std::vector<Scalar>(vec1[0].size(), 0.0));
+    // Initialize the result vector 
+    std::vector<std::vector<Scalar>> result(vec1.size());
 
-    // Perform element-wise addition
-    for (std::size_t i = 0; i < vec1.size(); ++i) {
-        for (std::size_t j = 0; j < vec1[0].size(); ++j) {
-            result[i][j] = vec1[i][j] + vec2[i][j];
+    for (size_t i = 0; i < vec1.size(); ++i) {
+        // Access the parameters of the i-th layer
+        for (size_t j = 0; j < vec1[i].size(); ++j) {
+            result[i].push_back(vec1[i][j] + vec2[i][j]);
         }
     }
 

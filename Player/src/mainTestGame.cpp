@@ -10,6 +10,7 @@
 using namespace MiniDNN;
 
 int main() {
+
     T *chromosomeType = player_getType();
     T_EVOLVABLE *chromosomeTypeEvolvable = player_getTypeEvolvable();
 
@@ -48,18 +49,16 @@ int main() {
 
     int gen = geneticAlgorithm_getNumGeneration(evolution);
     printf("Generation: %d\n", gen);
-
-
-    FILE *bestInfo = fopen("evol_data/bestInfo.txt", "w");
-
+    
+    // Get best
     float bestFitness;
     PLAYER *best = (PLAYER *) geneticAlgorithm_getBestChromosome(evolution, &bestFitness);
-    printf("Best: (%.2f, %.2f)\n\n", player_getElement(best), bestFitness);
-    fprintf(bestInfo, "%f\n\n", player_getElement(best));
-    fprintf(bestInfo, "Fitness: %f", bestFitness);
+    printf("Best fit: (%.2f)\n\n",bestFitness);
 
-    fclose(bestInfo);
-
+    //SAVE TO TXT FILE
+    // FILE *bestInfo = fopen("evol_data/bestInfo.txt", "w");
+    auto best_network = player_getElement(best);
+    serialize_parameters_txt("evol_data/bestInfo.txt", best_network.get_parameters());
 
     FILE *history = fopen("evol_data/history.csv", "w");
 

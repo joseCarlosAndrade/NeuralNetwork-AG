@@ -47,8 +47,6 @@ void player_erase(PLAYER **player_addr);
 Network player_getElement(const PLAYER *player); // getX
 
 
-
-
 // delete after
 void * playerInitFunction(void **dataVec, const int vecSize);
 

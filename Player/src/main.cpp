@@ -32,4 +32,6 @@ int main() {
 
     parameters = ((mlp + mlp2) * 10).GetParameters();
     print_parameters(parameters);
+
+    
 }
