@@ -21,6 +21,7 @@ class DenseNetwork {
     public:
         DenseNetwork(vector<int>& layers);
         DenseNetwork(vector<int>& layers, vector<vector<double>>& parameters);
+        DenseNetwork(const DenseNetwork& network);
         DenseNetwork(const string& filename);
 
         vector<int> GetLayers();
@@ -28,6 +29,7 @@ class DenseNetwork {
         void SetParameters(vector<vector<double>>& parameters);
 
         MatrixXd Predict(MatrixXd& input);
+        VectorXd Predict(VectorXd& input);
 
         void SaveAs(const string& filename);
 

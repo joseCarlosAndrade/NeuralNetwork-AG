@@ -33,6 +33,12 @@ DenseNetwork::DenseNetwork(vector<int>& layers, vector<vector<double>>& paramete
     this->Init(layers, parameters);
 }
 
+DenseNetwork::DenseNetwork(const DenseNetwork& network) {
+    vector<int> layers = network.layers;
+    vector<vector<double>> parameters = network.net.get_parameters();
+    this->Init(layers, parameters);
+}
+
 DenseNetwork::DenseNetwork(const string& filename) {
     vector<int> layers;
     vector<vector<double>> parameters;
@@ -81,6 +87,13 @@ void DenseNetwork::SetParameters(vector<vector<double>>& parameters) {
 
 MatrixXd DenseNetwork::Predict(MatrixXd& input) {
     return this->net.predict(input);
+}
+
+VectorXd DenseNetwork::Predict(VectorXd& input) {
+    MatrixXd matrixInput = Map<MatrixXd>(input.data(), input.size(), 1);
+    MatrixXd matrixOutput = this->net.predict(matrixInput);
+    VectorXd output = Eigen::Map<Eigen::VectorXd>(matrixOutput.data(), matrixOutput.size());
+    return output;
 }
 
 void DenseNetwork::SaveAs(const string& filename) {

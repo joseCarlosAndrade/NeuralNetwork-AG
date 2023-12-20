@@ -2,38 +2,52 @@
 #define PLAYER_H
 
 #include <vector>
-#include <concepts>         // VER PQ O INCLUDE DO CONCEPTS TA DANDO ERRADO (PRA MIM PELO MENOS)
+#include <concepts>
 #include <Eigen/Core>
 #include "MiniDNN.h"
 #include "DenseNetwork.h"
 #include "TwoPlayerGame.h"
+#include "type.h"
+#include "typeEvolvable.h"
 
 using namespace std;
 using namespace Eigen;
 using namespace MiniDNN;
 
-template<class T>
-concept Game = is_base_of<TwoPlayerGame, T>::value;
+template<class C>
+concept Game = is_base_of<TwoPlayerGame, C>::value;
 
-template<Game T>
 class Player {
     private:
+        static vector<int> netStructure;
+
         DenseNetwork *AI;
+        
+        template<Game G> static void * playerCopyFunction(const void *data);
+        template<Game G> static comparison playerCompareFunction(const void *data1, const void *data2);
+        template<Game G> static void playerPrintFunction(const void *data);
+        template<Game G> static void playerEraseFunction(void **data_addr);
 
-        //TODAS AS 8 FUNCOES DOS TYPE, COMO STATICS
-
-        static T *type;
-        static T_EVOL *typeEvolvable;
+        template<Game G> static void * playerInitFunction(void **dataVec, const int vecSize);
+        template<Game G> static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses);
+        template<Game G> static void * playerCrossoverFunction(const void *data1, const void *data2);
+        template<Game G> static void playerMutateFunction(void *data, const float mutation);
     
     public:
-        Player()
+        template<Game G> static T * GetType();
+        template<Game G> static T_EVOL * GetTypeEvolvable();
 
-        static T * GetType();           // inicializa o type se necessario e retorna
-        static T_EVOL * GetTypeEvolvable();      // inicializa o typeEvolvable se necessario e retorna
+        static vector<int> GetNetStructure();
+        static void SetNetStructure(vector<int>& netStructure);
 
-        DenseNetwork * GetAI();     // retorna o AI, como ponteiro mesmo, para podermos mexer nela por fora caso quisermos
+        Player();
+        Player(DenseNetwork& net);
+
+        DenseNetwork * GetAI();
 
         ~Player();
 };
+
+#include "Player-inl.cpp"
 
 #endif 
