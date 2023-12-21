@@ -39,7 +39,7 @@ void print_parameters(std::vector<std::vector<Scalar>> parameters);
 typedef struct player_st PLAYER;
 
 T * player_getType();
-T_EVOLVABLE * player_getTypeEvolvable();
+T_EVOL* player_getTypeEvolvable();
 
 void player_erase(PLAYER **player_addr);
 

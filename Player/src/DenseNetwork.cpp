@@ -22,7 +22,7 @@ DenseNetwork::DenseNetwork(vector<int>& layers) {
         int numParams = layers[i] * layers[i+1] + layers[i+1];
         for(int j=0 ; j<numParams ; j++) {
             double random = (double)rand() / (double)RAND_MAX;
-            parameters[i].push_back(random - 0.5);
+            parameters[i].push_back((random - 0.5)*PARAMETERS_DOMAIN);
         }
     }
 

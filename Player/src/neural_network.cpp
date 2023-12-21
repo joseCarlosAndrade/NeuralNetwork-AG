@@ -13,14 +13,18 @@ typedef Eigen::VectorXd Vector;
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <random>
 
-#define WRONG_MOVE_PENALTY 10
+#define WRONG_MOVE_PENALTY 1
 #define VICTORY_PREMIUM 15
+#define LOSS_PENALTY 15
+
+#define PARAMETERS_DOMAIN 2
 
 struct player_st {
     Network net;
     int num_layers = 6;
-    std::vector<int> num_neurons = {9,16,16,32,16,16,9};
+    std::vector<int> num_neurons = {9,32,32,64,32,32,9}; // {9,32,64,32,9}
 };
 
 
@@ -59,8 +63,8 @@ T * player_getType() {
 }
 
 
-T_EVOLVABLE * player_getTypeEvolvable() {
-    T_EVOLVABLE *playerTypeEvolvable = typeEvolvable_create(playerInitFunction, playerEvaluateFunction, playerCrossoverFunction, playerMutateFunction);
+T_EVOL * player_getTypeEvolvable(){
+    T_EVOL *playerTypeEvolvable = typeEvolvable_create(playerInitFunction, playerEvaluateFunction, playerCrossoverFunction, playerMutateFunction);
     return playerTypeEvolvable;
 }
 
@@ -85,23 +89,14 @@ static void playerPrintFunction(const void *data){
 
 PLAYER * player_create(const Network & net) {
     PLAYER * player_created = new PLAYER;    // FREE MEMORY
-    // PLAYER * player_created = (PLAYER *) malloc(1*sizeof(PLAYER));    // FREE MEMORY
     auto parameters = net.get_parameters();
     
     if(player_created == NULL) {
         return NULL;
     } // Trata falha no malloc
     
-    int num_layers =  net.num_layers(); // Número de camadas ocultas
-    auto layers = net.get_layers();
-    std::vector<int> num_neurons;
-    int i = 0;
-    for (i = 0; i < num_layers; ++i) {
-        // Access the parameters of the i-th layer
-        num_neurons.push_back(layers[i]->in_size());
-    }
-    num_neurons.push_back(layers[i-1]->out_size());
-    generate_RNN(player_created->net, num_layers, num_neurons);
+    PLAYER tempPLAYER;
+    generate_RNN(player_created->net, tempPLAYER.num_layers, tempPLAYER.num_neurons);
     player_created->net.set_parameters(parameters); // VER SE É NECESSÁRIO
     return player_created;
 }
@@ -160,30 +155,40 @@ static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out
                 int wrong_moves1 = 0;
                 int wrong_moves2 = 0;
                 auto game_result = game.ComVSCom(&player1->net, &player2->net, &wrong_moves1, &wrong_moves2, false);
-                // OUTFITNESS ESTA INICIALIZADO?
                 if(game_result == P1_VICTORY){
                     out_fitnesses[i] += VICTORY_PREMIUM;
+                    out_fitnesses[j] -= LOSS_PENALTY;
                 }else if (game_result == P2_VICTORY)
                 {
                     out_fitnesses[j] += VICTORY_PREMIUM;
+                    out_fitnesses[i] -= LOSS_PENALTY;
                 }
                 out_fitnesses[i] -= WRONG_MOVE_PENALTY * wrong_moves1;
                 out_fitnesses[j] -= WRONG_MOVE_PENALTY * wrong_moves2;
+
             }
         }
     }
 }
 
 
-
-
 static void playerMutateFunction(void *data, const float mutation) {
     if(data == NULL) {
         return;
     }
+    // Random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
     PLAYER *player = (PLAYER *) data;
     auto parameters = player->net.get_parameters();
-    scaleAndAdd(parameters, mutation);
+    // Randomly choose a layer to mutate
+    std::uniform_int_distribution<size_t> layerDist(0, parameters.size() - 1);
+    int layer_idx = layerDist(gen);
+    // Randomly choose a parameter from the layer to mutate
+    std::uniform_int_distribution<size_t> parameterDist(0, parameters[layer_idx].size() - 1);
+    int param_idx = parameterDist(gen);
+    // Mutate
+    parameters[layer_idx][param_idx] += PARAMETERS_DOMAIN * mutation;
     player->net.set_parameters(parameters);
 }
 
@@ -204,45 +209,6 @@ static void * playerCrossoverFunction(const void *data1, const void *data2) { //
     return playerNew;
     // Outra opção pegar 1 camada de um e 2 de outra
 }
-
-
-// int play_round(Game*game, Network & network) {
-//     int nb_wrong_moves = 0;
-//     // get the inputs (board)
-//     Matrix input(9,1);
-//     for ( int i = 0; i < 9; i++) {
-//         input(i,0) = (float)game->board[i];
-//     }
-
-//     if (game->player == P_2) { // neural network will always play as X (player 1)
-//         for (int i = 0; i < 9; i ++) {
-//             input(i,0) *= -1;
-//         }
-//     }
-
-//     // *** Calcular output da rede para o input
-//     auto output =  network.predict(input);
-
-//     // gets the best options (sorts)
-//     int choose = 0;
-
-//     // Get the indices of the sorted elements
-//     Eigen::VectorXi indices = Eigen::VectorXi::LinSpaced(output.rows(), 0, output.rows() - 1);
-//     std::sort(indices.data(), indices.data() + indices.size(), [&output](int i, int j) {
-//         return output(i, 0) < output(j, 0);});
-
-//     // Print the results
-//     std::cout << "\n Player:" << game->player <<" just played \n";
-//     std::cout << "Indices of Sorted Elements:\n" << indices << "\n";
-
-//     while (!put_piece(game, indices[choose++]))
-//     {
-//         printf("\nInvalid insertion.. \n");
-//         nb_wrong_moves++;
-//     }
-//     printf("Piece inserted: %d\n,", indices[choose-1]);
-//     return nb_wrong_moves;
-// }
 
 
 // Function to serialize parameters and save to a text file
@@ -289,12 +255,22 @@ void deserialize_parameters_txt(const std::string& filename, std::vector<std::ve
 
 // Function to generate a neural network
 void generate_RNN(Network & net,int num_layers, vector<int> & num_neurons){
+    vector<vector<double>> parameters;
+    for(int i=0 ; i<num_layers; i++) {
+        parameters.push_back(vector<double>());
+        int numParams = num_neurons[i] * num_neurons[i+1] + num_neurons[i+1];
+        for(int j=0 ; j<numParams ; j++) {
+            double random = (double)rand() / (double)RAND_MAX;
+            parameters[i].push_back(random - 0.5);
+        }
+    }
     int i = 0;
     for(i; i < num_layers - 1; i++){
         net.add_layer(new FullyConnected<ReLU>(num_neurons[i], num_neurons[i+1]));
     }
     net.add_layer(new FullyConnected<Softmax>(num_neurons[i], num_neurons[i+1]));
     net.init();
+    net.set_parameters(parameters);
 }
 
 // vector<Network> generate_vector_RNN(int num_RNN, int num_layers, vector<int> & num_neurons){
@@ -339,7 +315,7 @@ void print_parameters(vector<vector<Scalar>> parameters){
 void scaleAndAdd(std::vector<std::vector<Scalar>>& matrix, Scalar scaleFactor) {
     for (auto& row : matrix) {
         for (auto& element : row) {
-            element += element * scaleFactor;
+            element += element * scaleFactor; 
         }
     }
 }
