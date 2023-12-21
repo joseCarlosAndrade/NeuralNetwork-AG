@@ -10,36 +10,36 @@
 using namespace MiniDNN;
 
 int main() {
-    // auto game = TicTacToe();
-    // int num_layers = 6;
-    // std::vector<int> num_neurons = {9,32,32,64,32,32,9};
-    // Network player1;
-    // Network player2;
-    // generate_RNN(player1, num_neurons.size()-1, num_neurons);
-    // generate_RNN(player2, num_neurons.size()-1, num_neurons);
-    // auto parameters = player1.get_parameters();
-    // deserialize_parameters_txt("evol_data/bestInfo.txt", parameters);
-    // player1.set_parameters(parameters);
-    // player2.set_parameters(parameters);
-    // int wrong_moves1 = 0, wrong_moves2 = 0;
-    // auto game_result = game.ComVSCom(&player1, &player2, &wrong_moves1, &wrong_moves2, true);
-    // std::cout << "\nwrong moves 1: " <<wrong_moves1<<std::endl;
-    // std::cout << "\nwrong moves 2: " <<wrong_moves2<<std::endl;
-    // return 0;
+    auto game = TicTacToe();
+    int num_layers = 6;
+    std::vector<int> num_neurons = {9,32,32,64,32,32,9};
+    Network player1;
+    Network player2;
+    generate_RNN(player1, num_neurons.size()-1, num_neurons);
+    generate_RNN(player2, num_neurons.size()-1, num_neurons);
+    auto parameters = player1.get_parameters();
+    deserialize_parameters_txt("evol_data/bestInfo.txt", parameters);
+    player1.set_parameters(parameters);
+    player2.set_parameters(parameters);
+    int wrong_moves1 = 0, wrong_moves2 = 0;
+    auto game_result = game.ComVSCom(&player1, &player2, &wrong_moves1, &wrong_moves2, true);
+    std::cout << "\nwrong moves 1: " <<wrong_moves1<<std::endl;
+    std::cout << "\nwrong moves 2: " <<wrong_moves2<<std::endl;
+    return 0;
 
 
     T *chromosomeType = player_getType();
     T_EVOL *chromosomeTypeEvolvable = player_getTypeEvolvable();
 
-    int populationSize = 30;
+    int populationSize = 20;
     float mutationBase = 0.02;
     float mutationMultiplier = 2;
-    int mutationAdaptationStuckPeriod = 8;
+    int mutationAdaptationStuckPeriod = 10;
     selection_method selectionMethod = GA_SEL_ROULETTEWHEEL;   
     genocide_method genocideMethod = GA_GENO_ALL;
-    int genocideStuckPeriod = 40;  // at least 4 times bigger than adaptation stuck period
+    int genocideStuckPeriod = 50;  // at least 4 times bigger than adaptation stuck period
     predation_method predationMethod = GA_PRED_NONE;
-    int predationPeriod = 10;
+    int predationPeriod = 8;
     boolean isSexual = TRUE;
     boolean hasInheritance = FALSE;
 
@@ -59,7 +59,7 @@ int main() {
         printf("init falhou!");
     }
 
-    int generations = 400;
+    int generations = 300;
     if(!geneticAlgorithm_run(evolution, generations)) {
         printf("evolucao falhou!");
     }

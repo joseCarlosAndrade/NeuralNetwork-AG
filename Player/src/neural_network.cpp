@@ -15,7 +15,7 @@ typedef Eigen::VectorXd Vector;
 #include <memory>
 #include <random>
 
-#define WRONG_MOVE_PENALTY 1
+#define WRONG_MOVE_PENALTY 10
 #define VICTORY_PREMIUM 15
 #define LOSS_PENALTY 15
 
@@ -24,7 +24,7 @@ typedef Eigen::VectorXd Vector;
 struct player_st {
     Network net;
     int num_layers = 6;
-    std::vector<int> num_neurons = {9,32,32,64,32,32,9}; // {9,32,64,32,9}
+    std::vector<int> num_neurons = {9,32,32,64,32,32,9}; // {9,32,32,64,32,32,9}
 };
 
 
@@ -94,7 +94,7 @@ PLAYER * player_create(const Network & net) {
     if(player_created == NULL) {
         return NULL;
     } // Trata falha no malloc
-    
+
     PLAYER tempPLAYER;
     generate_RNN(player_created->net, tempPLAYER.num_layers, tempPLAYER.num_neurons);
     player_created->net.set_parameters(parameters); // VER SE É NECESSÁRIO
