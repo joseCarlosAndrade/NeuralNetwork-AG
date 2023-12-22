@@ -1,4 +1,5 @@
-C_ARGS=-Wall -std=c99 -march=native
+C_ARGS=-Wall -std=c99 -march=native -Iinclude
+CXX_ARGS=-Iinclude
 
 # main commands
 # compile my libraries
@@ -43,3 +44,8 @@ clean:
 	rm bin/*
 
 
+# cpp
+
+crow_server: 
+	mkdir -p bin/
+	g++  src/crow_server.cpp -lpthread $(CXX_ARGS) -o bin/crow
