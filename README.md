@@ -71,6 +71,7 @@ Métodos de predação implementados: predação por síntese, predação randô
 
 ### Jogo da velha simples e jogo da velha 2
 Dentro dos jogos implementados temos o tradicional jogo da velha, o tabuleiro é constituido por um vetor de 9 posições e os jogadores pelos valores 1 (X) e -1 (O). O jogo da velha 2 é constituido por um tabuleiro 9x9 com 81 casas ou 3x3 jogos da velha, o seu objetivo é ganhar o jogo grande. As regras são simples e existem somente dois tipos de jogadas, simples e especiais. No primeiro turno você escolha um jogo da velha (de 0 a 8) e uma posição no jogo da velha (de 0 a 8), após esse turno a jogada seguinte será no jogo da velha correspondente à jogada anterior. Vamos com um exemplo, suponha que o jogador 1 (X) jogue no jogo da velha central na posição superior direita o jogador -1 (O) deverá jogar no jogo da velha do canto superior direito. Ao se completar um jogo pequeno você "coloca" uma peça no jogo grande, o primeiro a ganhar o jogo da velha grande você ganha o jogo. No caso de uma jogada que te direcione para um tabuleiro que já tenha finalizado o jogo você ganha uma jogada especial, você pode então escolher qual jogo e qual posição você deseja jogar. Na implementação usamos uma matriz com 10 jogos da velha (os 9 pequenos e 1 grande), com isso separamos as funções de vitória, construção, validação de jogada para poder garantir que tudo funcione.
+
 De forma mais ilustrativa o link a seguir mostra de maneira mais ilustrativa como funciona o jogo da velha 2 [https://www.tiktok.com/@clebitoyt/video/7280661786972491013?lang=en](url)
 
 
