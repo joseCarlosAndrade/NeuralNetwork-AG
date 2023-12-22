@@ -69,7 +69,7 @@ Métodos de predação implementados: predação por síntese, predação randô
 
 Foi construída uma interface gráfica para o jogo do asilo:
 
-![interface do jogo do asilo](/docs/interface.png "Interface do jogo do asilo durante um jogo)
+![interface do jogo do asilo](/docs/interface.png "Interface do jogo do asilo durante um jogo")
 
 A interface do jogo do asilo foi construída em GO usando a biblioteca [Raylib](https://github.com/gen2brain/raylib-go), e toma conta de toda a execução local do jogo. Até o momento, é possível jogar 1 jogador contra 1 jogador local.
 
