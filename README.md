@@ -6,18 +6,33 @@ Este projeto visa oferecer uma solução abrangente para a aplicação de algori
 
 ## Configuração e instalação
 
-### Utilizando CMakeLists
-
 Para instalar, primeiro clone o repositório e, posteriormente, siga os seguintes comandos:
 
-'''shell
+### Requisitos
+
+### Obtenção das bibliotecas necessárias:
+
+As bibliotecas MiniDNN (https://github.com/yixuan/MiniDNN) e Eigen (https://eigen.tuxfamily.org/index.php?title=Main_Page) são fundamentais para o funcionamento deste projeto. Desta forma, verifique se foram copiadas de forma adequada ao clonar o repositório. Em caso negativo, remova as pastas vazias e siga os seguintes comandos:
+
+```shell
+    cd lib
+    git clone https://github.com/yixuan/MiniDNN.git # Clone a biblioteca MiniDNN
+    git clone git clone https://gitlab.com/libeigen/eigen.git # Clone a biblioteca Eigen
+```
+
+Vale destacar que este projeto necessita de versões recentes do compilador de C e C++, por isso, recomenda-se atualiza-los para a versão mais recente.
+
+
+### Configurações iniciais - CMakeLists
+
+```shell
     mkdir build   # Crie a pasta build
     cd build      
     cmake ..      # Configure o ambiente de compilação
     make          # Compile o repositório
-'''
+```
 
-### Utilizando MakeFiles
+### Configurações iniciais - MakeFiles
 
 Para instalar, primeiro clone o repositório e, posteriormente, siga os seguintes comandos:
 
@@ -30,9 +45,13 @@ Para instalar, primeiro clone o repositório e, posteriormente, siga os seguinte
 ```
 
 
+## Adaptação da biblioteca MiniDNN
+
+
 
 
 ## Biblioteca para Algoritmos Genéticos
+
 
 
 
@@ -54,7 +73,9 @@ Para instalar, primeiro clone o repositório e, posteriormente, siga os seguinte
 ## Integrantes do projeto
 
 Eduardo Souza Caproni
+
 José Carlos Andrade do Nascimento
+
 Matheus Della Rocca Martins
 
 
