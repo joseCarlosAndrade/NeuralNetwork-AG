@@ -54,7 +54,7 @@ Adaptou-se a biblioteca MiniDNN (https://github.com/yixuan/MiniDNN), já conheci
 
 Escrita em C, com intuíto de obter melhor desempenho computacional, esta biblioteca busca ser uma solução abrangente para a manipulação de algoritmos genéticos. A biblioteca está colocada dentro do repositório AG e facilita a criação de algoritmos evolutivos ao implementar genericamente uma grande variedade de métodos de seleção, predação e genocídio conhecidos da literatura dessa área. Além disso, a biblioteca permite, por meio de funções específicas descritas no header da biblioteca, a visualização do histórico de fitness e a obtenção do melhor indivíduo.
 
-Para utiliza-la em problemas variados o usuário deve descrever seu problema por meio da criação de funções pré-definidas que serão passadas para a biblioteca. Tais funções podem ser encotradas no arquivo de exemplo criado, funçãoescrota.c ou nos arquivos dos jogos implementados dentre da pasta Player, e devem fornecer informações essenciais como a forma de avaliar o fitness, executar o crossover e a mutação, obter um elemento do objeto evolutivo e descrever sua inicialização e criação.
+Para utiliza-la em problemas variados o usuário deve descrever seu problema por meio da criação de funções pré-definidas que serão passadas para a biblioteca. Tais funções podem ser encotradas no arquivo de exemplo criado, funçãoescrota.c ou nos arquivos dos jogos implementados dentre da pasta Player, e devem fornecer informações essenciais como a forma de avaliar o fitness, executar o crossover e a mutação, obter um elemento do objeto evolutivo e descrever sua inicialização e criação. Por fim, utiliza-se uma estrutura chamada Type Evolvable para criar uma estrutura de dados genérica ao passar o T_EVOL como argumento na sua criação, permitindo que a estrutura consiga lidar com os dados recebidos. Vale destacar que o Type Evolvable é um TAD que guarda funções específicas para a utilização em algoritmos evolutivos.
 
 Métodos de seleção implementados: elitismo, torneio de dois e roleta. 
 
@@ -98,9 +98,15 @@ Diretórios:
 
 Eduardo Souza Caproni
 
+Gabriel Takeshi Miyake Batistella
+
+Guilherme Barros Villela
+
 José Carlos Andrade do Nascimento
 
 Matheus Della Rocca Martins
+
+Nicolas Oliveira Rossoni
 
 
 
