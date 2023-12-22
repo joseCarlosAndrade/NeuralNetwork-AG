@@ -1,4 +1,8 @@
 # Rede Neural treinada com Algoritmos Genéticos
+## Video de Apresentação
+### https://youtu.be/kaWYe7BqBng
+## Teste do algoritmo genético com crossomo simples
+### https://youtu.be/E3LUL54FpG8
 
 ## Descrição
 
