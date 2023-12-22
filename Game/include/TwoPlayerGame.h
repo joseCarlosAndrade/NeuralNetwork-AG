@@ -1,12 +1,11 @@
 #ifndef TWOPLAYERGAME_H
 #define TWOPLAYERGAME_H
 
-#include <Eigen/Core> 
-#include "MiniDNN.h"
+#include <Eigen/Core>
+#include "DenseNetwork.h"
 
 using namespace std;
 using namespace Eigen;
-using namespace MiniDNN;
 
 typedef enum {
     ONGOING = -1,
@@ -32,6 +31,7 @@ class TwoPlayerGame {
         int * GetPlaysInputs(VectorXd& playsProbs);
 
         void SwitchPlayer();
+        bool CheckComStructure(DenseNetwork *com);
 
     public:
         TwoPlayerGame(int boardRows, int boardCols, int gameStateLen, int playInputLen);
@@ -40,8 +40,8 @@ class TwoPlayerGame {
         int GetPlayInputLen();
 
         game_status PlayerVSPlayer();
-        game_status PlayerVSCom(Network *com, int *out_errors, bool verbose);
-        game_status ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2, bool verbose);
+        game_status PlayerVSCom(DenseNetwork *com, int *out_errors, bool verbose);
+        game_status ComVSCom(DenseNetwork *com1, DenseNetwork *com2, int *out_errors1, int *out_errors2, bool verbose);
 
         virtual ~TwoPlayerGame();
 };

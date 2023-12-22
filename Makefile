@@ -1,47 +1,26 @@
-C_ARGS=-Wall -std=c99 -march=native
+MAIN = app/main.cpp
+AG_UTIL = AG/src/util.c AG/src/type.c AG/src/typeEvolvable.c AG/src/geneticAlgorithm.c
+GAME_UTIL = Game/src/TwoPlayerGame.cpp Game/src/TicTacToe.cpp
+PLAYER_UTIL = Player/src/DenseNetwork.cpp Player/src/Player.cpp
+BINARY = bin/teste
+ZIP = teste.zip
+AG_FOLDER = AG/include
+GAME_FOLDER = Game/include
+PLAYER_FOLDER = Player/include
+EIGEN_FOLDER = lib/eigen
+MINIDNN_FOLDER = lib/MiniDNN/include
 
-# main commands
-# compile my libraries
-install: bin/initialization.o bin/operations.o bin/velha.o
-	
-	ar rcs bin/matrixop.a bin/initialization.o bin/operations.o
-	ar rcs bin/velha.a bin/velha.o
+all:
+	@g++ -std=c++20 -Wall -Werror -g -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(PLAYER_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(AG_UTIL) $(GAME_UTIL) $(PLAYER_UTIL) $(MAIN) -o $(BINARY) -lm
 
-# compile the main code
-all: bin/network.o
-	gcc bin/network.o -o bin/network -L/bin bin/*.a -lm
-
-# run the main code
 run:
-	./bin/network
+	@./$(BINARY)
 
-bin/network.o: game/main.c
-	gcc -c game/main.c -o bin/network.o $(C_ARGS)
-
-# run a single instance of jogo da veia
-single: bin/main.o
-	gcc -o bin/main bin/main.o -L/bin bin/matrixop.a bin/velha.a
-
-bin/main.o: single/main.c
-	gcc -c single/main.c -o bin/main.o $(C_ARGS)
-
-run_single: 
-	./bin/main
-
-# ignore these
-bin/initialization.o: src/initialization.c include/matrix_operations.h
-	mkdir -p bin/
-	gcc src/initialization.c -c $(C_ARGS) -o bin/initialization.o
-
-bin/operations.o: src/operations.c include/matrix_operations.h
-	gcc src/operations.c -c $(C_ARGS) -o bin/operations.o
-
-bin/velha.o: src/velha.c include/velha.h
-	gcc src/velha.c -c $(C_ARGS) -o bin/velha.o
+valgrind:
+	@valgrind --tool=memcheck --leak-check=full  --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
 
 clean:
-	rm bin/*
+	@rm $(BINARY) $(ZIP)
 
 zip:
-	@zip -r backup.zip *
-
+	@zip -r $(ZIP) *

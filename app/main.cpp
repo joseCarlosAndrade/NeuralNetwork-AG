@@ -1,35 +1,16 @@
-
-#include "../include/util.h"
-#include "../include/type.h"
-#include "../include/typeEvolvable.h"
-#include "../include/geneticAlgorithm.h"
-//#include "../include/funcaoEscrota.h"
-
-#include "neural_network.h"
-
-using namespace MiniDNN;
+#include "util.h"
+#include "type.h"
+#include "typeEvolvable.h"
+#include "geneticAlgorithm.h"
+#include "TicTacToe.h"
+#include "Player.h"
 
 int main() {
-    // auto game = TicTacToe();
-    // int num_layers = 6;
-    // std::vector<int> num_neurons = {9,32,32,64,32,32,9};
-    // Network player1;
-    // Network player2;
-    // generate_RNN(player1, num_neurons.size()-1, num_neurons);
-    // generate_RNN(player2, num_neurons.size()-1, num_neurons);
-    // auto parameters = player1.get_parameters();
-    // deserialize_parameters_txt("evol_data/bestInfo.txt", parameters);
-    // player1.set_parameters(parameters);
-    // player2.set_parameters(parameters);
-    // int wrong_moves1 = 0, wrong_moves2 = 0;
-    // auto game_result = game.ComVSCom(&player1, &player2, &wrong_moves1, &wrong_moves2, true);
-    // std::cout << "\nwrong moves 1: " <<wrong_moves1<<std::endl;
-    // std::cout << "\nwrong moves 2: " <<wrong_moves2<<std::endl;
-    // return 0;
+    vector<int> netStructure = {9, 16, 32, 16, 9};
+    Player<TicTacToe>::SetNetStructure(netStructure);
 
-
-    T *chromosomeType = player_getType();
-    T_EVOL *chromosomeTypeEvolvable = player_getTypeEvolvable();
+    T *chromosomeType = Player<TicTacToe>::GetType();
+    T_EVOL *chromosomeTypeEvolvable = Player<TicTacToe>::GetTypeEvolvable();
 
     int populationSize = 30;
     float mutationBase = 0.02;
@@ -37,7 +18,7 @@ int main() {
     int mutationAdaptationStuckPeriod = 8;
     selection_method selectionMethod = GA_SEL_ROULETTEWHEEL;   
     genocide_method genocideMethod = GA_GENO_ALL;
-    int genocideStuckPeriod = 40;  // at least 4 times bigger than adaptation stuck period
+    int genocideStuckPeriod = 40;
     predation_method predationMethod = GA_PRED_NONE;
     int predationPeriod = 10;
     boolean isSexual = TRUE;
@@ -51,9 +32,6 @@ int main() {
                                             isSexual,
                                             hasInheritance,
                                             chromosomeType, chromosomeTypeEvolvable);
-
-
-    playerInitFunction(nullptr, 0);
 
     if(!geneticAlgorithm_init(evolution)){
         printf("init falhou!");
@@ -69,13 +47,12 @@ int main() {
     
     // Get best
     float bestFitness;
-    PLAYER *best = (PLAYER *) geneticAlgorithm_getBestChromosome(evolution, &bestFitness);
+    Player<TicTacToe> *best = (Player<TicTacToe> *) geneticAlgorithm_getBestChromosome(evolution, &bestFitness);
     printf("Best fit: (%.2f)\n\n",bestFitness);
 
-    //SAVE TO TXT FILE
-    // FILE *bestInfo = fopen("evol_data/bestInfo.txt", "w");
-    auto best_network = player_getElement(best);
-    serialize_parameters_txt("evol_data/bestInfo.txt", best_network.get_parameters());
+    // Save to txt file
+    DenseNetwork *best_network = best->GetAI();
+    best_network->SaveAs("evol_data/bestInfo.txt");
 
     FILE *history = fopen("evol_data/history.csv", "w");
 
@@ -97,7 +74,8 @@ int main() {
     }
 
     fclose(history);
-    player_erase(&best);
+
+    delete best;
     free(bestFistnessHistory);
     free(meanFistnessHistory);
 

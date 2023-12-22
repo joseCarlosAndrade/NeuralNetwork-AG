@@ -22,7 +22,7 @@ DenseNetwork::DenseNetwork(vector<int>& layers) {
         int numParams = layers[i] * layers[i+1] + layers[i+1];
         for(int j=0 ; j<numParams ; j++) {
             double random = (double)rand() / (double)RAND_MAX;
-            parameters[i].push_back((random - 0.5)*PARAMETERS_DOMAIN);
+            parameters[i].push_back((random - 0.5) * PARAMETERS_DOMAIN);
         }
     }
 
@@ -141,7 +141,7 @@ DenseNetwork DenseNetwork::operator+(const DenseNetwork& other) {
 
 DenseNetwork DenseNetwork::operator-(const DenseNetwork& other) {
     if(this->layers != other.layers) {
-        cerr << "Vectors must have the same size for element-wise addition." << endl;
+        cerr << "Vectors must have the same size for element-wise subtraction." << endl;
         return *this;
     }
 
@@ -188,6 +188,70 @@ DenseNetwork DenseNetwork::operator/(double k) {
     }
 
     return DenseNetwork(this->layers, resultParams);
+}
+
+DenseNetwork& DenseNetwork::operator+=(const DenseNetwork& other) {
+    if(this->layers != other.layers) {
+        cerr << "Vectors must have the same size for element-wise addition." << endl;
+        return *this;
+    }
+
+    vector<vector<double>> params1 = this->net.get_parameters();
+    vector<vector<double>> params2 = other.net.get_parameters();
+    
+    for(size_t i=0 ; i<params1.size() ; i++) {
+        for(size_t j=0 ; j<params1[i].size() ; j++) {
+            params1[i][j] += params2[i][j];
+        }
+    }
+
+    this->net.set_parameters(params1);
+    return *this;
+}
+
+DenseNetwork& DenseNetwork::operator-=(const DenseNetwork& other) {
+    if(this->layers != other.layers) {
+        cerr << "Vectors must have the same size for element-wise subtraction." << endl;
+        return *this;
+    }
+
+    vector<vector<double>> params1 = this->net.get_parameters();
+    vector<vector<double>> params2 = other.net.get_parameters();
+    
+    for(size_t i=0 ; i<params1.size() ; i++) {
+        for(size_t j=0 ; j<params1[i].size() ; j++) {
+            params1[i][j] -= params2[i][j];
+        }
+    }
+
+    this->net.set_parameters(params1);
+    return *this;
+}
+
+DenseNetwork& DenseNetwork::operator*=(double k) {
+    vector<vector<double>> params = this->net.get_parameters();
+    
+    for(size_t i=0 ; i<params.size() ; i++) {
+        for(size_t j=0 ; j<params[i].size() ; j++) {
+            params[i][j] *= k;
+        }
+    }
+
+    this->net.set_parameters(params);
+    return *this;
+}
+
+DenseNetwork& DenseNetwork::operator/=(double k) {
+    vector<vector<double>> params = this->net.get_parameters();
+    
+    for(size_t i=0 ; i<params.size() ; i++) {
+        for(size_t j=0 ; j<params[i].size() ; j++) {
+            params[i][j] /= k;
+        }
+    }
+
+    this->net.set_parameters(params);
+    return *this;
 }
 
 DenseNetwork::~DenseNetwork() {

@@ -1,5 +1,5 @@
 MAIN = src/main.cpp
-UTIL = src/DenseNetwork.cpp src/Player.cpp include/Player-inl.cpp
+UTIL = src/DenseNetwork.cpp src/Player.cpp
 AG_UTIL = ../AG/src/util.c ../AG/src/type.c ../AG/src/typeEvolvable.c
 GAME_UTIL = ../Game/src/TwoPlayerGame.cpp ../Game/src/TicTacToe.cpp
 BINARY = bin/teste

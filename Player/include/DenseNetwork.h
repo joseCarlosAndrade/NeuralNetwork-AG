@@ -1,10 +1,10 @@
 #ifndef DENSENETWORK_H
 #define DENSENETWORK_H
 
+#include <stdlib.h>
 #include <string>
 #include <vector>
 #include <Eigen/Core>
-#include <stdlib.h>
 #include "MiniDNN.h" 
 
 using namespace std;
@@ -39,6 +39,10 @@ class DenseNetwork {
         DenseNetwork operator-(const DenseNetwork& other);
         DenseNetwork operator*(double k);
         DenseNetwork operator/(double k);
+        DenseNetwork& operator+=(const DenseNetwork& other);
+        DenseNetwork& operator-=(const DenseNetwork& other);
+        DenseNetwork& operator*=(double k);
+        DenseNetwork& operator/=(double k);
 
         ~DenseNetwork();
 };

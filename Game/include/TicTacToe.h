@@ -2,12 +2,10 @@
 #define TICTACTOE_H
 
 #include <Eigen/Core> 
-#include "MiniDNN.h"
 #include "TwoPlayerGame.h"
 
 using namespace std;
 using namespace Eigen;
-using namespace MiniDNN;
 
 class TicTacToe : public TwoPlayerGame {
     protected:
