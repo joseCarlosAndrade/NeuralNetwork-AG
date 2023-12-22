@@ -12,10 +12,9 @@ extern "C" {
 #include <time.h>
 
 //------------BOOLEAN---------------
-typedef enum {
-    FALSE = 0,
-    TRUE = 1
-} boolean;
+typedef int boolean;
+#define FALSE 0
+#define TRUE 1
 //----------------------------------
 
 

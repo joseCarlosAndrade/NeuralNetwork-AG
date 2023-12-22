@@ -4,7 +4,6 @@
 #include <vector>
 #include <concepts>
 #include <Eigen/Core>
-#include "MiniDNN.h"
 #include "DenseNetwork.h"
 #include "TwoPlayerGame.h"
 #include "type.h"
@@ -14,28 +13,33 @@ using namespace std;
 using namespace Eigen;
 using namespace MiniDNN;
 
+#define WRONG_MOVE_PENALTY 1
+#define VICTORY_PRIZE 15
+#define LOSS_PENALTY 25
+
 template<class C>
 concept Game = is_base_of<TwoPlayerGame, C>::value;
 
+template<Game G>
 class Player {
     private:
         static vector<int> netStructure;
 
         DenseNetwork *AI;
         
-        template<Game G> static void * playerCopyFunction(const void *data);
-        template<Game G> static comparison playerCompareFunction(const void *data1, const void *data2);
-        template<Game G> static void playerPrintFunction(const void *data);
-        template<Game G> static void playerEraseFunction(void **data_addr);
+        static void * playerCopyFunction(const void *data);
+        static comparison playerCompareFunction(const void *data1, const void *data2);
+        static void playerPrintFunction(const void *data);
+        static void playerEraseFunction(void **data_addr);
 
-        template<Game G> static void * playerInitFunction(void **dataVec, const int vecSize);
-        template<Game G> static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses);
-        template<Game G> static void * playerCrossoverFunction(const void *data1, const void *data2);
-        template<Game G> static void playerMutateFunction(void *data, const float mutation);
+        static void * playerInitFunction(void **dataVec, const int vecSize);
+        static void playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses);
+        static void * playerCrossoverFunction(const void *data1, const void *data2);
+        static void playerMutateFunction(void *data, const float mutation);
     
     public:
-        template<Game G> static T * GetType();
-        template<Game G> static T_EVOL * GetTypeEvolvable();
+        static T * GetType();
+        static T_EVOL * GetTypeEvolvable();
 
         static vector<int> GetNetStructure();
         static void SetNetStructure(vector<int>& netStructure);
@@ -48,6 +52,6 @@ class Player {
         ~Player();
 };
 
-#include "Player-inl.cpp"
+#include "../src/Player.cpp"    // Player INL
 
 #endif 

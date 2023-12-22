@@ -1,53 +1,42 @@
-C_ARGS=-Wall -std=c99 -march=native -Iinclude
-CXX_ARGS=-Iinclude
+TRAIN = app/train.cpp
+TEST = app/test.cpp
+AG_UTIL = AG/src/util.c AG/src/type.c AG/src/typeEvolvable.c AG/src/geneticAlgorithm.c
+GAME_UTIL = Game/src/TwoPlayerGame.cpp Game/src/TicTacToe.cpp Game/src/ConnectFour.cpp
+PLAYER_UTIL = Player/src/DenseNetwork.cpp Player/src/Player.cpp
+BINARY_TRAIN = bin/train
+BINARY_TEST = bin/test
+ZIP = backup.zip
+AG_FOLDER = AG/include
+GAME_FOLDER = Game/include
+PLAYER_FOLDER = Player/include
+EIGEN_FOLDER = lib/eigen
+MINIDNN_FOLDER = lib/MiniDNN/include
+PYTHON_PLOT = python_plot_history/python_plot_history.py
 
-# main commands
-# compile my libraries
-install: bin/initialization.o bin/operations.o bin/velha.o
-	
-	ar rcs bin/matrixop.a bin/initialization.o bin/operations.o
-	ar rcs bin/velha.a bin/velha.o
+all:
+	@g++ -std=c++20 -Wall -Werror -g -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(PLAYER_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(AG_UTIL) $(GAME_UTIL) $(PLAYER_UTIL) $(TRAIN) -o $(BINARY_TRAIN) -lm
+	@g++ -std=c++20 -Wall -Werror -g -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(PLAYER_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(AG_UTIL) $(GAME_UTIL) $(PLAYER_UTIL) $(TEST) -o $(BINARY_TEST) -lm
 
-# compile the main code
-all: bin/network.o
-	gcc bin/network.o -o bin/network -L/bin bin/*.a -lm
+comp_train:
+	@g++ -std=c++20 -Wall -Werror -g -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(PLAYER_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(AG_UTIL) $(GAME_UTIL) $(PLAYER_UTIL) $(TRAIN) -o $(BINARY_TRAIN) -lm
 
-# run the main code
-run:
-	./bin/network
+comp_test:
+	@g++ -std=c++20 -Wall -Werror -g -I$(AG_FOLDER) -I$(GAME_FOLDER) -I$(PLAYER_FOLDER) -I$(EIGEN_FOLDER) -I$(MINIDNN_FOLDER) $(AG_UTIL) $(GAME_UTIL) $(PLAYER_UTIL) $(TEST) -o $(BINARY_TEST) -lm
 
-bin/network.o: game/main.c
-	gcc -c game/main.c -o bin/network.o $(C_ARGS)
+train:
+	@./$(BINARY_TRAIN)
 
-# run a single instance of jogo da veia
-single: bin/main.o
-	gcc -o bin/main bin/main.o -L/bin bin/matrixop.a bin/velha.a
+test:
+	@./$(BINARY_TEST)
 
-bin/main.o: single/main.c
-	gcc -c single/main.c -o bin/main.o $(C_ARGS)
+plot:
+	@python3 $(PYTHON_PLOT)
 
-run_single: 
-	./bin/main
-
-# ignore these
-bin/initialization.o: src/initialization.c include/matrix_operations.h
-	mkdir -p bin/
-	gcc src/initialization.c -c $(C_ARGS) -o bin/initialization.o
-
-bin/operations.o: src/operations.c include/matrix_operations.h
-	gcc src/operations.c -c $(C_ARGS) -o bin/operations.o
-
-bin/velha.o: src/velha.c include/velha.h
-	gcc src/velha.c -c $(C_ARGS) -o bin/velha.o
+valgrind:
+	@valgrind --tool=memcheck --leak-check=full  --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
 
 clean:
-	rm bin/*
+	@rm $(BINARY_TRAIN) $(BINARY_TEST) $(ZIP)
 
 zip:
-	@zip -r backup.zip *
-
-# cpp
-
-crow_server: 
-	mkdir -p bin/
-	g++  src/crow_server.cpp -lpthread $(CXX_ARGS) -o bin/crow
+	@zip -r $(ZIP) *

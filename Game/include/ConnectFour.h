@@ -1,5 +1,5 @@
-#ifndef TICTACTOE_H
-#define TICTACTOE_H
+#ifndef CONNECTFOUR_H
+#define CONNECTFOUR_H
 
 #include <Eigen/Core> 
 #include "TwoPlayerGame.h"
@@ -7,7 +7,7 @@
 using namespace std;
 using namespace Eigen;
 
-class TicTacToe : public TwoPlayerGame {
+class ConnectFour : public TwoPlayerGame {
     protected:
         bool IsSpaceValid(int input) override;
         void PutPiece(int input) override;
@@ -18,8 +18,8 @@ class TicTacToe : public TwoPlayerGame {
         int GetRandomValidInput(VectorXd& gameState) override;
 
     public:
-        TicTacToe();
-        ~TicTacToe();
+        ConnectFour();
+        ~ConnectFour();
 };
 
 #endif 

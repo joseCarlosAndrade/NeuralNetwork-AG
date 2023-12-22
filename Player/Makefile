@@ -1,7 +1,7 @@
 MAIN = src/main.cpp
-UTIL = src/DenseNetwork.cpp src/Player.cpp include/Player-inl.cpp
+UTIL = src/DenseNetwork.cpp src/Player.cpp
 AG_UTIL = ../AG/src/util.c ../AG/src/type.c ../AG/src/typeEvolvable.c
-GAME_UTIL = ../Game/src/TwoPlayerGame.cpp ../Game/src/TicTacToe.cpp
+GAME_UTIL = ../Game/src/TwoPlayerGame.cpp ../Game/src/TicTacToe.cpp ../Game/src/ConnectFour.cpp
 BINARY = bin/teste
 ZIP = teste.zip
 INCLUDE_FOLDER = include

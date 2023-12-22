@@ -6,32 +6,18 @@
 
 using namespace std;
 
-void print_parameters(vector<vector<Scalar>> parameters){
-    cout << parameters.size() << endl;
-    for (size_t i = 0; i < parameters.size(); ++i) {
-        cout << parameters[i].size() << endl;
-        for (size_t j = 0; j < parameters[i].size(); ++j) {
-                Scalar value = parameters[i][j];
-                cout << "Layer " << i << ", Parameter " << j << ": " << value << endl;
-        }
-    }
-}
-
 int main() {
     srand(time(NULL));
 
-    vector<int> layers = {2, 5, 3};
-    DenseNetwork mlp = DenseNetwork(layers);
-    DenseNetwork mlp2 = DenseNetwork(layers);
+    vector<int> netStructure = {9, 16, 16, 9};
+    Player<TicTacToe>::SetNetStructure(netStructure);
 
-    vector<vector<double>> parameters;
+    Player<TicTacToe> *com = new Player<TicTacToe>();
+    TwoPlayerGame *game = new TicTacToe();
 
-    parameters = mlp.GetParameters();
-    print_parameters(parameters);
+    int errors = 0;
+    game->ComVSRandom(com->GetAI(), &errors, true, true);
 
-    parameters = mlp2.GetParameters();
-    print_parameters(parameters);
-
-    parameters = ((mlp + mlp2) * 10).GetParameters();
-    print_parameters(parameters);
+    delete game;
+    delete com;
 }

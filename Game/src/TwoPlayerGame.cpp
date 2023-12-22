@@ -20,6 +20,13 @@ void TwoPlayerGame::SwitchPlayer() {
    }
 }
 
+bool TwoPlayerGame::CheckComStructure(DenseNetwork *com) {
+    vector<int> layers = com->GetLayers();
+    int firstLayer = layers[0];
+    int lastLayer = layers[layers.size()-1];
+    return firstLayer == this->gameStateLen && lastLayer == this->playInputLen;
+}
+
 TwoPlayerGame::TwoPlayerGame(int boardRows, int boardCols, int gameStateLen, int playInputLen) {
     this->boardRows = boardRows;
     this->boardCols = boardCols;
@@ -63,20 +70,53 @@ game_status TwoPlayerGame::PlayerVSPlayer() {
     return this->CheckGameStatus();
 }
 
-game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbose) {
-    if(verbose || this->turnPlayer == 1) this->PrintBoard();
+game_status TwoPlayerGame::PlayerVSRandom(bool playerFirst, bool verbose) {
+    int playerTurn = playerFirst ? 1 : 2;
+
+    if(verbose || this->turnPlayer == playerTurn) this->PrintBoard();
 
     while(this->CheckGameStatus() == ONGOING) {
         int input;
-        if(this->turnPlayer == 1) {
+        if(this->turnPlayer == playerTurn) {
             do {
-                cout << "Jogador 1, faça sua jogada: ";
+                cout << "Jogador " << this->turnPlayer << ", faça sua jogada: ";
                 cin >> input;
             } while(!this->IsSpaceValid(input));
         }
         else {
             VectorXd gameState = this->GetGameState();
-            VectorXd plays = com->predict(gameState);
+            input = this->GetRandomValidInput(gameState);
+        }
+
+        this->PutPiece(input);
+        if(verbose || this->turnPlayer == playerTurn) this->PrintBoard();
+        this->SwitchPlayer();
+    }
+
+    return this->CheckGameStatus();
+}
+
+game_status TwoPlayerGame::PlayerVSCom(DenseNetwork *com, int *out_errors, bool playerFirst, bool verbose) {
+    if(!this->CheckComStructure(com)) {
+        cerr << "This AI's structure isn't suited for this Game!" << endl;
+        return TIE;
+    }
+
+    int playerTurn = playerFirst ? 1 : 2;
+
+    if(verbose || this->turnPlayer == playerTurn) this->PrintBoard();
+
+    while(this->CheckGameStatus() == ONGOING) {
+        int input;
+        if(this->turnPlayer == playerTurn) {
+            do {
+                cout << "Jogador " << this->turnPlayer << ", faça sua jogada: ";
+                cin >> input;
+            } while(!this->IsSpaceValid(input));
+        }
+        else {
+            VectorXd gameState = this->GetGameState();
+            VectorXd plays = com->Predict(gameState);
             int *inputs = this->GetPlaysInputs(plays);
 
             int i = 0;
@@ -89,22 +129,65 @@ game_status TwoPlayerGame::PlayerVSCom(Network *com, int *out_errors, bool verbo
         }
 
         this->PutPiece(input);
-        if(verbose || this->turnPlayer == 1) this->PrintBoard();
+        if(verbose || this->turnPlayer == playerTurn) this->PrintBoard();
         this->SwitchPlayer();
     }
 
     return this->CheckGameStatus();
 }
 
-game_status TwoPlayerGame::ComVSCom(Network *com1, Network *com2, int *out_errors1, int *out_errors2, bool verbose) {
+game_status TwoPlayerGame::ComVSRandom(DenseNetwork *com, int *out_errors, bool comFirst, bool verbose) {
+    if(!this->CheckComStructure(com)) {
+        cerr << "This AI's structure isn't suited for this Game!" << endl;
+        return TIE;
+    }
+
+    int comTurn = comFirst ? 1 : 2;
+
     if(verbose) this->PrintBoard();
 
     while(this->CheckGameStatus() == ONGOING) {
-        Network *com = (this->turnPlayer == 1) ? com1 : com2;
+        int input;
+        if(this->turnPlayer == comTurn) {
+            VectorXd gameState = this->GetGameState();
+            VectorXd plays = com->Predict(gameState);
+            int *inputs = this->GetPlaysInputs(plays);
+
+            int i = 0;
+            while(!this->IsSpaceValid(inputs[i])) {
+                i++;
+                *out_errors += 1;
+            }
+            input = inputs[i];
+            delete[] inputs;
+        }
+        else {
+            VectorXd gameState = this->GetGameState();
+            input = this->GetRandomValidInput(gameState);
+        }
+
+        this->PutPiece(input);
+        if(verbose) this->PrintBoard();
+        this->SwitchPlayer();
+    }
+
+    return this->CheckGameStatus();
+}
+
+game_status TwoPlayerGame::ComVSCom(DenseNetwork *com1, DenseNetwork *com2, int *out_errors1, int *out_errors2, bool verbose) {
+    if(!this->CheckComStructure(com1) || !this->CheckComStructure(com2)) {
+        cerr << "This AI's structure isn't suited for this Game!" << endl;
+        return TIE;
+    }
+
+    if(verbose) this->PrintBoard();
+
+    while(this->CheckGameStatus() == ONGOING) {
+        DenseNetwork *com = (this->turnPlayer == 1) ? com1 : com2;
         int *out_errors = (this->turnPlayer == 1) ? out_errors1 : out_errors2;
 
         VectorXd gameState = this->GetGameState();
-        VectorXd plays = com->predict(gameState);
+        VectorXd plays = com->Predict(gameState);
         int *inputs = this->GetPlaysInputs(plays);
 
         int i = 0;
