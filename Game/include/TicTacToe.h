@@ -15,6 +15,7 @@ class TicTacToe : public TwoPlayerGame {
         void PrintBoard() override;
 
         VectorXd GetGameState() override;
+        int GetRandomValidInput(VectorXd& gameState) override;
 
     public:
         TicTacToe();

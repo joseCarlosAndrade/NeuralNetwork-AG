@@ -89,6 +89,17 @@ VectorXd TicTacToe::GetGameState() {
    return gameState;
 }
 
+int TicTacToe::GetRandomValidInput(VectorXd& gameState) {
+    vector<int> validInputs;
+    for(int i=0 ; i<9 ; i++) {
+        if(gameState[i] == 0) {
+            validInputs.push_back(i);
+        }
+    }
+    int idx = rand() % (int)validInputs.size();
+    return validInputs[idx];
+}
+
 TicTacToe::TicTacToe()
 : TwoPlayerGame(3, 3, 9, 9) {
 
