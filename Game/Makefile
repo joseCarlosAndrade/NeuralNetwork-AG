@@ -1,5 +1,5 @@
 MAIN = src/main.cpp
-UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp
+UTIL = src/TwoPlayerGame.cpp src/TicTacToe.cpp src/ConnectFour.cpp
 PLAYER_UTIL = ../Player/src/DenseNetwork.cpp
 BINARY = bin/teste
 ZIP = teste.zip

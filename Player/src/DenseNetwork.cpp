@@ -5,7 +5,7 @@ void DenseNetwork::Init(vector<int>& layers, vector<vector<double>>& parameters)
 
     int numLayers = layers.size();
     for(int i=0 ; i<numLayers-2 ; i++) {
-        this->net.add_layer(new FullyConnected<ReLU>(layers[i], layers[i+1]));
+        this->net.add_layer(new FullyConnected<Identity>(layers[i], layers[i+1]));
     }
     this->net.add_layer(new FullyConnected<Softmax>(layers[numLayers-2], layers[numLayers-1]));
 

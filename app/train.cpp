@@ -12,17 +12,17 @@ int main() {
     T *chromosomeType = Player<TicTacToe>::GetType();
     T_EVOL *chromosomeTypeEvolvable = Player<TicTacToe>::GetTypeEvolvable();
 
-    int populationSize = 30;
-    float mutationBase = 0.02;
+    int populationSize = 60;
+    float mutationBase = 0.08;
     float mutationMultiplier = 2;
-    int mutationAdaptationStuckPeriod = 8;
-    selection_method selectionMethod = GA_SEL_ROULETTEWHEEL;   
+    int mutationAdaptationStuckPeriod = 10;
+    selection_method selectionMethod = GA_SEL_ELITISM;
     genocide_method genocideMethod = GA_GENO_ALL;
-    int genocideStuckPeriod = 40;
-    predation_method predationMethod = GA_PRED_NONE;
+    int genocideStuckPeriod = 50;
+    predation_method predationMethod = GA_PRED_RANDOM;
     int predationPeriod = 10;
     boolean isSexual = TRUE;
-    boolean hasInheritance = FALSE;
+    boolean hasInheritance = TRUE;
 
     GA *evolution = geneticAlgorithm_create(populationSize,
                                             mutationBase, mutationMultiplier, mutationAdaptationStuckPeriod,
@@ -37,9 +37,12 @@ int main() {
         printf("init falhou!");
     }
 
-    int generations = 400;
-    if(!geneticAlgorithm_run(evolution, generations)) {
-        printf("evolucao falhou!");
+    int generations = 500;
+    for(int i=0 ; i<generations ; i+=10) {
+        if(!geneticAlgorithm_run(evolution, 10)) {
+            printf("evolucao falhou!");
+        }
+        cout << "Populacao na Geracao numero " << i+10 << endl;
     }
 
     int gen = geneticAlgorithm_getNumGeneration(evolution);

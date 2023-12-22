@@ -15,7 +15,7 @@ using namespace MiniDNN;
 
 #define WRONG_MOVE_PENALTY 1
 #define VICTORY_PRIZE 15
-#define LOSS_PENALTY 15
+#define LOSS_PENALTY 25
 
 template<class C>
 concept Game = is_base_of<TwoPlayerGame, C>::value;

@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Replace 'your_file.csv' with the actual path to your CSV file
-csv_file = '../build/Debug/evol_data/history.csv'
+csv_file = 'evol_data/history.csv'
 
 # Read the CSV file into a pandas DataFrame
 df = pd.read_csv(csv_file, header=None)

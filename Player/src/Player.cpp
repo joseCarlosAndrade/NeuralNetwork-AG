@@ -78,6 +78,36 @@ void Player<G>::playerEvaluateFunction(void **dataVec, const int vecSize, float 
     }
 
     for(int i=0 ; i<vecSize ; i++) {
+        Player<G> *player = (Player<G> *) dataVec[i];
+        for(int j=0; j<2*vecSize; j++) {
+            G game;
+            bool isFirst = j < vecSize;
+            int errors = 0;
+            game_status result = game.ComVSRandom(player->AI, &errors, isFirst, false);
+
+            float points;
+            if(result == P1_VICTORY) {
+                points = isFirst ? VICTORY_PRIZE : -LOSS_PENALTY;
+            }
+            else if(result == P2_VICTORY) {
+                points = isFirst ? -LOSS_PENALTY : VICTORY_PRIZE;
+            }
+            else {
+                points = 0;
+            }
+            out_fitnesses[i] += points;
+            out_fitnesses[i] -= errors * WRONG_MOVE_PENALTY;
+        }
+    }
+}
+
+/* template<Game G>
+void Player<G>::playerEvaluateFunction(void **dataVec, const int vecSize, float *out_fitnesses) {
+    for(int i=0 ; i<vecSize ; i++) {
+        out_fitnesses[i] = 0;
+    }
+
+    for(int i=0 ; i<vecSize ; i++) {
         Player<G> *player1 = (Player<G> *) dataVec[i];
         for(int j=0; j<vecSize; j++) {
             if(i == j) {
@@ -102,7 +132,7 @@ void Player<G>::playerEvaluateFunction(void **dataVec, const int vecSize, float 
             out_fitnesses[j] -= errors2 * WRONG_MOVE_PENALTY;
         }
     }
-}
+} */
 
 template<Game G>
 void * Player<G>::playerCrossoverFunction(const void *data1, const void *data2) {
@@ -180,8 +210,12 @@ Player<G>::Player() {
 
 template<Game G>
 Player<G>::Player(DenseNetwork& net) {
-    if(net.GetLayers() != Player<G>::netStructure) {
-        cerr << "This network doesn't have the accepted structure for this type of Player!" << endl;
+    G game;
+    vector<int> layers = net.GetLayers();
+    int firstLayer = layers[0];
+    int lastLayer = layers[layers.size()-1];
+    if(firstLayer != game.GetGameStateLen() || lastLayer != game.GetPlayInputLen()) {
+        cerr << "This network doesn't have an accepted structure for this type of Player!" << endl;
         return;
     }
 

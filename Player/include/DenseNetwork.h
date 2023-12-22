@@ -11,7 +11,7 @@ using namespace std;
 using namespace Eigen;
 using namespace MiniDNN;
 
-#define PARAMETERS_DOMAIN 2
+#define PARAMETERS_DOMAIN 4
 
 class DenseNetwork {
     private:
