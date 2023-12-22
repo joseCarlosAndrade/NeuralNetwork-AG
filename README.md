@@ -17,13 +17,13 @@ As bibliotecas MiniDNN (https://github.com/yixuan/MiniDNN) e Eigen (https://eige
 ```shell
     cd lib
     git clone https://github.com/yixuan/MiniDNN.git # Clone a biblioteca MiniDNN
-    git clone git clone https://gitlab.com/libeigen/eigen.git # Clone a biblioteca Eigen
+    git clone https://gitlab.com/libeigen/eigen.git # Clone a biblioteca Eigen
 ```
 
 Vale destacar que este projeto necessita de versões recentes do compilador de C e C++, por isso, recomenda-se atualiza-los para a versão mais recente.
 
 
-### Configurações iniciais - CMakeLists
+### Configurações iniciais - CMakeLists - Opção cmake
 
 ```shell
     mkdir build   # Crie a pasta build
@@ -32,18 +32,20 @@ Vale destacar que este projeto necessita de versões recentes do compilador de C
     make          # Compile o repositório
 ```
 
-### Configurações iniciais - MakeFiles
+### Configurações iniciais - MakeFiles - Opção Make
 
 Para instalar, primeiro clone o repositório e, posteriormente, siga os seguintes comandos:
 
 ```shell
-    make install # compile my libraries 
-
     make all # compile the main code
 
-    make run # run the main code
-```
+    make train # run the train code
 
+    make test  # run the test
+
+    make plot # run to plot history
+```
+Também é possível compilar separadamente as bibliotecas de cada pasta, usando make all. Isso possibilita testar as bibliotecas separadamente.
 
 ## Adaptação da biblioteca MiniDNN
 
