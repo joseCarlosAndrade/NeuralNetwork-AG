@@ -1,4 +1,4 @@
-#include"../include/velha.h"
+#include "velha.h"
 #include<stdio.h>
 
 
@@ -86,3 +86,4 @@ void print_board(Game * game) {
 int * get_board(Game *game) {
     return game->board;
 }
+

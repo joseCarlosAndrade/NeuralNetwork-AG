@@ -1,6 +1,10 @@
 #ifndef GENETICALGORITHM_H
 #define GENETICALGORITHM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "util.h"
 #include "type.h"
 #include "typeEvolvable.h"
@@ -42,7 +46,7 @@ GA * geneticAlgorithm_create(const int populationSize,
                              const predation_method predationMethod, const int predationPeriod,
                              const boolean isSexual,
                              const boolean hasInheritance,
-                             T *populationType, T_EVOLVABLE *populationTypeEvolvable);
+                             T *populationType, T_EVOL *populationTypeEvolvable);
 
 boolean geneticAlgorithm_init(GA *geneticAlgorithm);
 boolean geneticAlgorithm_run(GA *geneticAlgorithm, const int numGenerations);
@@ -55,5 +59,9 @@ float * geneticAlgorithm_getBestFitnessHistory(const GA *geneticAlgorithm);
 float * geneticAlgorithm_getMeanFitnessHistory(const GA *geneticAlgorithm);
 
 void geneticAlgorithm_erase(GA **geneticAlgorithm_addr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //GENETICALGORITHM_H

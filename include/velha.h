@@ -4,6 +4,10 @@
 #ifndef _VELHA_H
 #define _VELHA_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define P_1 1 // X
 #define P_2 -1 // O
 
@@ -47,5 +51,9 @@ void print_board(Game *game);
 @param[in] game Game board 
 @return int[9] An array that represents the current state of the board */
 int * get_board(Game *game);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
