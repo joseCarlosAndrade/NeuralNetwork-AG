@@ -10,9 +10,11 @@ Para instalar, primeiro clone o repositório e, posteriormente, siga os seguinte
 
 ### Requisitos
 
-### Obtenção das bibliotecas necessárias:
+---
 
-As bibliotecas MiniDNN (https://github.com/yixuan/MiniDNN) e Eigen (https://eigen.tuxfamily.org/index.php?title=Main_Page) são fundamentais para o funcionamento deste projeto. Desta forma, verifique se foram copiadas de forma adequada ao clonar o repositório. Em caso negativo, remova as pastas vazias e siga os seguintes comandos:
+### Obtenção das bibliotecas necessárias
+
+As bibliotecas [MiniDNN](https://github.com/yixuan/MiniDNN) e [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) são fundamentais para o funcionamento deste projeto. Desta forma, verifique se foram copiadas de forma adequada ao clonar o repositório. Em caso negativo, remova as pastas vazias e siga os seguintes comandos:
 
 ```shell
     cd lib
@@ -21,7 +23,6 @@ As bibliotecas MiniDNN (https://github.com/yixuan/MiniDNN) e Eigen (https://eige
 ```
 
 Vale destacar que este projeto necessita de versões recentes do compilador de C e C++, por isso, recomenda-se atualiza-los para a versão mais recente.
-
 
 ### Configurações iniciais - CMakeLists
 
@@ -37,18 +38,18 @@ Vale destacar que este projeto necessita de versões recentes do compilador de C
 Para instalar, primeiro clone o repositório e, posteriormente, siga os seguintes comandos:
 
 ```shell
-    make install # compile my libraries 
+    make install # instalar as dependencias
 
-    make all # compile the main code
+    make all # compilar
 
-    make run # run the main code
+    make run 
 ```
 
+---
 
 ## Adaptação da biblioteca MiniDNN
 
-Adaptou-se a biblioteca MiniDNN (https://github.com/yixuan/MiniDNN), já conhecida por possibilitar a criação facilitada de redes neurais profundas com uma variedade de características customizáveis, de modo que fosse possível tanto inicializar uma rede neural a partir da passagem do número de camadas e neurônios como realizar operações fundamentais de soma, subtração, divisão e multiplicação de duas redes neurais facilmente. Além disso, possibilitou-se a inicialização de uma rede neural com parâmetros de pesos e biases lidos de um arquivo de texto e também o salvamento destes parâmetros em arquivos de texto. 
-
+Adaptou-se a biblioteca [MiniDNN](https://github.com/yixuan/MiniDNN), já conhecida por possibilitar a criação facilitada de redes neurais profundas com uma variedade de características customizáveis, de modo que fosse possível tanto inicializar uma rede neural a partir da passagem do número de camadas e neurônios como realizar operações fundamentais de soma, subtração, divisão e multiplicação de duas redes neurais facilmente. Além disso, possibilitou-se a inicialização de uma rede neural com parâmetros de pesos e biases lidos de um arquivo de texto e também o salvamento destes parâmetros em arquivos de texto.
 
 ## Biblioteca para Algoritmos Genéticos
 
@@ -56,31 +57,49 @@ Escrita em C, com intuíto de obter melhor desempenho computacional, esta biblio
 
 Para utiliza-la em problemas variados o usuário deve descrever seu problema por meio da criação de funções pré-definidas que serão passadas para a biblioteca. Tais funções podem ser encotradas no arquivo de exemplo criado, funçãoEscrota.c, ou no diretório Player, Player.cpp, e devem fornecer informações essenciais como a forma de avaliar o fitness, executar o crossover e a mutação, obter um elemento do objeto evolutivo e descrever sua inicialização e criação. Por fim, utiliza-se uma estrutura chamada Type Evolvable para criar uma estrutura de dados genérica ao passar o T_EVOL como argumento na sua criação, permitindo que a estrutura consiga lidar com os dados recebidos. Vale destacar que o Type Evolvable é um TAD que guarda funções específicas para a utilização em algoritmos evolutivos.
 
-Métodos de seleção implementados: elitismo, torneio de dois e roleta. 
+Métodos de seleção implementados: elitismo, torneio de dois e roleta.
 
 Métodos de genocídio implementados: genocídio mantendo o melhor elemento na população, genocídio de todos os elementos e genocídio desabilitado.
 
 Métodos de predação implementados: predação por síntese, predação randômica e predação desabilitada.
 
+---
 
 ## Interface gráfica
 
+Foi construída uma interface gráfica para o jogo do asilo:
 
+![interface do jogo do asilo](/docs/interface.png "Interface do jogo do asilo durante um jogo)
+
+A interface do jogo do asilo foi construída em GO usando a biblioteca [Raylib](https://github.com/gen2brain/raylib-go), e toma conta de toda a execução local do jogo. Até o momento, é possível jogar 1 jogador contra 1 jogador local.
+
+A interface foi construída com o propósito de fornecer uma jogabilidade mais apelativa e compreensível para o usuário, pois o Jogo do Asilo leva um tabuleiro de 81 casas (9^2). Posteriormente, será feito a comunicação da rede neural treinada com esta interface, possibilitando um jogador humano jogar contra uma rede neural (AI).
+
+### Compilando interface
+
+Basta ter Go instalado ([consultar aqui](https://go.dev/doc/install)), ir ao diretório da interface, e usar o `Makefile` lá existente:
+
+```shell
+    cd interface
+
+    make install # instalar as dependecias de go utilizadas (raylib)
+
+    make go_interface # compilando a interface
+
+    make run_interface # inicializa a interface
+```
+
+---
 
 ## Jogos implementados
 
 ### Jogo da velha simples e jogo da velha 2
+
 Dentro dos jogos implementados temos o tradicional jogo da velha, o tabuleiro é constituido por um vetor de 9 posições e os jogadores pelos valores 1 (X) e -1 (O). O jogo da velha 2 é constituido por um tabuleiro 9x9 com 81 casas ou 3x3 jogos da velha, o seu objetivo é ganhar o jogo grande. As regras são simples e existem somente dois tipos de jogadas, simples e especiais. No primeiro turno você escolha um jogo da velha (de 0 a 8) e uma posição no jogo da velha (de 0 a 8), após esse turno a jogada seguinte será no jogo da velha correspondente à jogada anterior. Vamos com um exemplo, suponha que o jogador 1 (X) jogue no jogo da velha central na posição superior direita o jogador -1 (O) deverá jogar no jogo da velha do canto superior direito. Ao se completar um jogo pequeno você "coloca" uma peça no jogo grande, o primeiro a ganhar o jogo da velha grande você ganha o jogo. No caso de uma jogada que te direcione para um tabuleiro que já tenha finalizado o jogo você ganha uma jogada especial, você pode então escolher qual jogo e qual posição você deseja jogar. Na implementação usamos uma matriz com 10 jogos da velha (os 9 pequenos e 1 grande), com isso separamos as funções de vitória, construção, validação de jogada para poder garantir que tudo funcione.
 
-De forma mais ilustrativa o link a seguir mostra de maneira mais ilustrativa como funciona o jogo da velha 2 [https://www.tiktok.com/@clebitoyt/video/7280661786972491013?lang=en](url)
-
-
-
+De forma mais ilustrativa o link a seguir mostra de maneira mais ilustrativa [como funciona o jogo da velha 2](https://www.tiktok.com/@clebitoyt/video/7280661786972491013?lang=en)
 
 ### Ligue 4
-
-
-
 
 ## Diretórios fundamentais
 
@@ -90,20 +109,19 @@ Diretório que contém a biblioteca para manipulação de algoritmos genéticos.
 
 ### Player
 
-Diretório que contém a adaptação da biblioteca para manipulação de Redes Neurais e a implementação genérica das funções essenciais para a criação de um algoritmo evolutivo para jogos competitivos, como o jogo da velha e o ligue 4. 
+Diretório que contém a adaptação da biblioteca para manipulação de Redes Neurais e a implementação genérica das funções essenciais para a criação de um algoritmo evolutivo para jogos competitivos, como o jogo da velha e o ligue 4.
 
 ### app
 
-Diretório com scripts para a execução do treinamento e possíveis testes com redes treinadas. 
+Diretório com scripts para a execução do treinamento e possíveis testes com redes treinadas.
 
 ### Game
 
-Diretório com a implementação de jogos criados para treinamento de redes neurais. 
+Diretório com a implementação de jogos criados para treinamento de redes neurais.
 
 ### python_plot_history
 
 Diretório com script para plotagem dos gráficos com informações fundamentais do treinamento da rede, representando a evolução do fitness médio e do melhor indivíduo em função do número de gerações.
-
 
 ## Integrantes do projeto
 
