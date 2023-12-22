@@ -47,13 +47,20 @@ Para instalar, primeiro clone o repositório e, posteriormente, siga os seguinte
 
 ## Adaptação da biblioteca MiniDNN
 
-
+Adaptou-se a biblioteca MiniDNN (https://github.com/yixuan/MiniDNN), já conhecida por possibilitar a criação facilitada de redes neurais profundas com uma variedade de características customizáveis, de modo que fosse possível tanto inicializar uma rede neural a partir da passagem do número de camadas e neurônios como realizar operações fundamentais de soma, subtração, divisão e multiplicação de duas redes neurais facilmente. Além disso, possibilitou-se a inicialização de uma rede neural com parâmetros de pesos e biases lidos de um arquivo de texto e também o salvamento destes parâmetros em arquivos de texto. 
 
 
 ## Biblioteca para Algoritmos Genéticos
 
+Escrita em C, com intuíto de obter melhor desempenho computacional, esta biblioteca busca ser uma solução abrangente para a manipulação de algoritmos genéticos. A biblioteca está colocada dentro do repositório AG e facilita a criação de algoritmos evolutivos ao implementar genericamente uma grande variedade de métodos de seleção, predação e genocídio conhecidos da literatura dessa área. Além disso, a biblioteca permite, por meio de funções específicas descritas no header da biblioteca, a visualização do histórico de fitness e a obtenção do melhor indivíduo.
 
+Para utiliza-la em problemas variados o usuário deve descrever seu problema por meio da criação de funções pré-definidas que serão passadas para a biblioteca. Tais funções podem ser encotradas no arquivo de exemplo criado, funçãoescrota.c ou nos arquivos dos jogos implementados dentre da pasta Player, e devem fornecer informações essenciais como a forma de avaliar o fitness, executar o crossover e a mutação, obter um elemento do objeto evolutivo e descrever sua inicialização e criação.
 
+Métodos de seleção implementados: elitismo, torneio de dois e roleta. 
+
+Métodos de genocídio implementados: genocídio mantendo o melhor elemento na população, genocídio de todos os elementos e genocídio desabilitado.
+
+Métodos de predação implementados: predação por síntese, predação randômica e predação desabilitada.
 
 
 ## Interface gráfica
@@ -69,6 +76,23 @@ Para instalar, primeiro clone o repositório e, posteriormente, siga os seguinte
 ### Ligue 4
 
 
+
+
+## Arquivos importantes
+
+Diretórios:
+
+### AG
+
+
+### Player
+
+
+### app
+
+
+
+### Game
 
 ## Integrantes do projeto
 
